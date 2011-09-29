@@ -32,6 +32,16 @@ class Envato_Protected_API {
   public $api_key;
   
   /**
+   * The default API URL
+   *
+   * @since   1.0
+   * @access  private
+   *
+   * @var     string
+   */
+  protected $public_url = 'http://marketplace.envato.com/api/edge/set.json';
+  
+  /**
    * Error messages
    *
    * @since   1.0
@@ -78,9 +88,9 @@ class Envato_Protected_API {
       $user_name = $this->user_name;
       
     if ( $set_data !== '' ) 
-      $set .= ":$set_data";
+      $set_data = ":$set_data";
       
-    $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set.json";
+    $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
 
     $result = $this->curl( $url );
     
@@ -126,6 +136,20 @@ class Envato_Protected_API {
       return isset( $download->url ) ? $download->url : false;
   }
   
+  /**
+   * Retrieve the details for a specific marketplace item.
+   *
+   * @since   1.0
+   * @access  public
+   *
+   * @param string $item_id The id of the item you need information for. 
+   * @return object Details for the given item.
+   */
+  public function item_details( $item_id ) {
+    $url = preg_replace( '/set/i', 'item:' . $item_id, $this->public_url );
+    return $this->curl( $url )->item;
+  }
+   
   /**
    * Helper function to set error messages.
    *
@@ -182,5 +206,11 @@ class Envato_Protected_API {
       
     if ( isset( $data->error ) )
       $this->set_error( 'api_error', $data->error ); 
+  }
+  
+  public function pretty_print( $array ) {
+    echo '<pre>';
+    print_r( $array );
+    echo '</pre>';
   }
 }

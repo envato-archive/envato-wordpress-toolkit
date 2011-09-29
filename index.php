@@ -80,6 +80,24 @@ class Envato_WordPress_Updater {
     }
     
     add_action( 'admin_init', array( &$this, '_admin_init' ) );
+    
+    add_filter( 'install_theme_complete_actions', array( &$this, '_install_theme_complete_actions' ), 10, 1 );
+    
+    add_thickbox();
+		wp_enqueue_script( 'theme-preview' );
+  }
+  
+  function _install_theme_complete_actions( $install_actions ) {
+    if ( isset( $_GET['page'] ) && isset( $_GET['action'] ) ) {
+      $page = $_GET['page'];
+      $action = $_GET['action'];
+      if ( $page == 'envato-wordpress-updater' ) {
+        if ( $action == 'install-theme' ) {
+          $install_actions['themes_page'] = '<a href="' . self_admin_url('admin.php?page=envato-wordpress-updater') . '" title="' . esc_attr__( 'Return to Theme Installer' ) . '" target="_parent">' . __( 'Return to Theme Installer' ) . '</a>';
+        }
+      }
+    }
+    return $install_actions;
   }
   
   /**
@@ -127,18 +145,58 @@ class Envato_WordPress_Updater {
       $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
       $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
       
-      if ( $user_name || $api_key ) {
+      if ( $user_name && $api_key )
         $api =& new Envato_Protected_API( $user_name, $api_key );
-        $ewpu_themes = $api->wp_list_themes();
-        
-        if ( $errors = $api->api_errors() ) {
-          print_r( $errors );
-        } else if ( ! empty( $ewpu_themes ) ) {
-          print_r( $ewpu_themes );
-          foreach( $ewpu_themes as $theme ) {
-            print_r( $theme );
+          
+      /* run action */
+      if ( isset( $_GET['action'] ) ) {
+        $theme = isset( $_REQUEST['theme'] ) ? urldecode( $_REQUEST['theme'] ) : '';
+        $action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
+      	
+        if ( 'install-theme' == $action ) {
+          if ( class_exists( 'Envato_Protected_API' ) && $theme !== '' ) {
+            $envato_install =& new Envato_Install( $api );
+            $envato_install->install_theme( $theme );
           }
         }
+      } else {
+        if ( $user_name || $api_key ) {
+          $api =& new Envato_Protected_API( $user_name, $api_key );
+          $ewpu_themes = $api->wp_list_themes();
+          
+          if ( $errors = $api->api_errors() ) {
+            print_r( $errors );
+          } else if ( ! empty( $ewpu_themes ) ) {
+            
+            //$api->pretty_print( $ewpu_themes );
+            
+            //$themes = get_themes();
+            //$theme_names = array_keys($themes);
+            //$api->pretty_print( $themes );
+            
+            echo '<ul class="item-list">';
+            foreach( $ewpu_themes as $theme ) {
+              
+              $item_details = $api->item_details( $theme->item_id );
+              //$api->pretty_print($item_details);
+              
+              //$download = $api->wp_download( $theme->item_id );
+              //$api->pretty_print( $download );
+              
+              echo '<li>';
+                echo '<div class="thumbnail"><img src="' . $item_details->thumbnail  . '" alt="' . $theme->item_name . '" height="80" width="80" /></div>';
+                echo '
+                <div class="item-details">
+                  <h4>' . $theme->item_name . ' by ' . $theme->author_name . '</h4>
+                  <p>lorem ipsum</p>
+                  ' . ( $item_details->tags ? '<p>Tags: ' . $item_details->tags . '</p>' : '' ) . '
+                </div>';
+                echo '<div class="update-info"><a class="button-primary" id="install" href="' . wp_nonce_url( self_admin_url( 'admin.php?page=envato-wordpress-updater&action=install-theme&theme=' . $theme->item_id ), 'install-theme_' . $theme->item_id ) . '">' . __( 'Install Now' ) . '</a></div>';
+              echo '</li>';
+            }
+            echo '</ul>';
+          }
+        }      
       }
       ?>
     </div>
