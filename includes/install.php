@@ -6,8 +6,6 @@
  *
  * @package     Envato WordPress Updater
  * @author      Derek Herman <derek@valendesigns.com>
- * @copyright   Copyright (c) 2011, Derek Herman
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 class Envato_Install {
@@ -30,32 +28,45 @@ class Envato_Install {
     $this->api = $api;
   }
 
-
+  /**
+   * Manually installs a theme from the Envato API.
+   *
+   * @since     1.0
+   * @access    private
+   */
   function install_theme( $theme ) {
+    global $current_screen;
+    
     if ( ! current_user_can( 'install_themes' ) )
       wp_die( __( 'You do not have sufficient permissions to install themes for this site.' ) );
 
-		check_admin_referer( 'install-theme_' . $theme );
-            
-    include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
+    check_admin_referer( 'install-theme_' . $theme );
+    
+    /* setup theme info in $api array */
+    $api = (object) array();
     foreach( $this->api->wp_list_themes() as $t ) {
       if ( $theme == $t->item_id ) {
-        $item_name = $t->item_name;
-        $version = $t->version;
+        $api->name = $t->item_name;
+        $api->version = $t->version;
         continue;
       }
     }
     
-		$title = sprintf( __( 'Installing Theme: %s' ), $item_name . ' ' . $version );
-		$nonce = 'install-theme_' . $theme;
-		$url = 'update.php?action=install-theme&theme=' . $theme;
-		$type = 'web';
-		
-		$upgrader = new Theme_Upgrader( new Theme_Installer_Skin( compact( 'title', 'url', 'nonce' ) ) );
-		$upgrader->install( $this->api->wp_download( $theme ) );
+    $title = sprintf( __( 'Installing Theme: %s' ), $api->name . ' ' . $api->version );
+    $nonce = 'install-theme_' . $theme;
+    $url = 'admin.php?page=envato-wordpress-updater&action=install-theme&theme=' . $theme;
+    $type = 'web';
+    
+    /* trick WP into thinking it's the themes page for the icon32 */
+    $current_screen->parent_base = 'themes';
+    
+    /* new Envato_Theme_Upgrader */
+    $upgrader = new Envato_Theme_Upgrader( new Theme_Installer_Skin( compact( 'title', 'url', 'api', 'nonce' ) ) );
+    
+    /* install the theme */
+    $upgrader->install( $this->api->wp_download( $theme ) );
   }
 
 }
 /* End of file install.php */
-/* Location: ./motif/core/includes/install.php */
+/* Location: ./includes/install.php */

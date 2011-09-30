@@ -6,8 +6,6 @@
  *
  * @package     Envato WordPress Updater
  * @author      Derek Herman <derek@valendesigns.com>
- * @copyright   Copyright (c) 2011, Derek Herman
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 class Envato_Update {
@@ -215,4 +213,4 @@ class Envato_Update {
 $envato_update =& new Envato_Update();
 
 /* End of file update.php */
-/* Location: ./motif/core/includes/update.php */
+/* Location: ./includes/update.php */
