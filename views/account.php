@@ -14,6 +14,6 @@ echo '
   do_settings_sections( 'envato-wordpress-updater' );
   echo '
   <p class="submit">
-    <input type="submit" name="Submit" class="button-primary" value="' . __( 'Save Changes', 'envato' ) . '" />
+    <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save User Settings', 'envato' ) . '" />
   </p>
 </form>';

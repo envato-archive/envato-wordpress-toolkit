@@ -6,21 +6,18 @@
  * @author      Derek Herman <derek@valendesigns.com>
  * @since       1.0
  */
-
-/* get purchased marketplace themes */
-$ewpu_themes = $api->wp_list_themes();
-      
+   
 /* themes are available */
-if ( count( $ewpu_themes ) > 0 ) {
+if ( count( $themes ) > 0 ) {
 
   /* get WP installed themes */
-  $themes = get_themes();
+  $get_themes = get_themes();
   
   echo '<h3>Available Themes</h3>';
   echo '<ul class="item-list">';
   
   /* loop through the marketplace themes */
-  foreach( $ewpu_themes as $theme ) {
+  foreach( $themes as $theme ) {
     
     /* setup the item details */
     $item_details = $api->item_details( $theme->item_id );
@@ -30,10 +27,10 @@ if ( count( $ewpu_themes ) > 0 ) {
     $stylesheet = '';
     
     /* check if installed */
-    foreach( $themes as $k => $v ) {
-      if ( $themes[$k]['Title'] == $theme->theme_name && $themes[$k]['Author Name'] == $theme->author_name ) {
-        $template = $themes[$k]['Template'];
-        $stylesheet = $themes[$k]['Stylesheet'];
+    foreach( $get_themes as $k => $v ) {
+      if ( $get_themes[$k]['Title'] == $theme->theme_name && $get_themes[$k]['Author Name'] == $theme->author_name ) {
+        $template = $get_themes[$k]['Template'];
+        $stylesheet = $get_themes[$k]['Stylesheet'];
         continue;
       }
     }
@@ -60,7 +57,7 @@ if ( count( $ewpu_themes ) > 0 ) {
         
         /* delete link */
         $delete_link = wp_nonce_url( 'admin.php?page=envato-wordpress-updater&action=delete&template=' . $template, 'delete-theme_' . $template );
-        $install_actions['delete'] = '<a href="' . $delete_link . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $theme->theme_name ) ) . '">' . __( 'Delete' ) . '</a>';
+        $install_actions['delete'] = '<a href="' . $delete_link . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $theme->theme_name ) ) . '" onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to delete the '%s' theme.\n\n'Cancel' to stop, 'OK' to delete." ), $theme->theme_name ) ) . "' );" . '">' . __( 'Delete' ) . '</a>';
         
       }
     } else {
@@ -75,7 +72,7 @@ if ( count( $ewpu_themes ) > 0 ) {
     $theme_link = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
     $install_actions['theme_url'] = '<a href="' . $theme_link .  '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221; on ThemeForest ' ), $theme->theme_name ) ) . '">' . __( 'View on ThemeForest' ) . '</a>';
       
-    $button = '<div class="update-info">' . implode( ' | ', $install_actions ) . '</div>';
+    $install_links = '<div class="update-info">' . implode( ' | ', $install_actions ) . '</div>';
     
     /* echo the HTML */
     echo '<li>';
@@ -84,8 +81,7 @@ if ( count( $ewpu_themes ) > 0 ) {
       <div class="item-details">
         <h3>' . $theme->theme_name . ' ' . $theme->version . ' by ' . $theme->author_name . '</h3>
         ' . ( $theme->description ? '<p class="description">' . $theme->description . '</p>' : '' ) . '
-        ' . ( $item_details->tags ? '<p>Tags: ' . $item_details->tags . '</p>' : '' ) . '
-        ' . $button . '
+        ' . $install_links . '
       </div>';
     echo '</li>';
   }

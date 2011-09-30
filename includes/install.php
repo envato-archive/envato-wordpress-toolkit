@@ -31,10 +31,14 @@ class Envato_Install {
   /**
    * Manually installs a theme from the Envato API.
    *
-   * @since     1.0
    * @access    private
+   * @since     1.0
+   *
+   * @param     string    Theme item_id from ThemeForests
+   * @param     array     List of all purchased themes
+   * @return    void
    */
-  function install_theme( $theme ) {
+  function install_theme( $theme, $themes ) {
     global $current_screen;
     
     if ( ! current_user_can( 'install_themes' ) )
@@ -44,7 +48,7 @@ class Envato_Install {
     
     /* setup theme info in $api array */
     $api = (object) array();
-    foreach( $this->api->wp_list_themes() as $t ) {
+    foreach( $themes as $t ) {
       if ( $theme == $t->item_id ) {
         $api->name = $t->item_name;
         $api->version = $t->version;
