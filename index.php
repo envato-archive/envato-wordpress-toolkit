@@ -126,7 +126,7 @@ class Envato_WordPress_Updater {
    * @return   void
    */
   function _envato_load_styles() {
-
+    wp_enqueue_style( 'envato-wp-updater', EWPU_PLUGIN_URL . '/assets/css/style.css', false, EWPU_PLUGIN_VER, 'all' );
   }
   
   /**
@@ -266,7 +266,7 @@ class Envato_WordPress_Updater {
    * @return   string
    */
   public function _user_account_info() {
-    _e( 'The general section description goes here.', 'envato' );
+    _e( 'A description on how to use the Envato API goes here.', 'envato' );
   }
   
   /**

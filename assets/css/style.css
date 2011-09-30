@@ -1,0 +1,29 @@
+div.updated, 
+div.error {
+  margin-left: 0px;
+}
+#api-verification {
+  clear: both;
+  margin-bottom: 40px;
+}
+.item-list {
+  overflow: hidden;
+  width: 100%;
+}
+  .item-list li {
+    display: block;
+    margin: 0 20px 40px 0;
+    overflow: hidden;
+    width: 535px;
+  }
+    .item-list li .thumbnail {
+      background: #fff;
+      border: 1px solid #ccc;
+      float: left;
+      padding: 4px;
+      width: 80px;
+    }
+    .item-list li .item-details {
+      float: right;
+      width: 435px;
+    }

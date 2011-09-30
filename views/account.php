@@ -8,7 +8,7 @@
  */
 
 echo '
-<form name="verification_form" method="post" action="options.php">';
+<form name="verification_form" method="post" action="options.php" id="api-verification">';
   wp_nonce_field( 'update-options' );
   settings_fields( 'envato-wordpress-updater' );
   do_settings_sections( 'envato-wordpress-updater' );
