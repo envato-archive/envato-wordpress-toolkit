@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'EWPU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
 /**
- * List all the themes purchased
+ * List all the themes purchased along with any relevant links and info.
  *
  * @package     Envato WordPress Updater
  * @author      Derek Herman <derek@valendesigns.com>
@@ -12,78 +12,183 @@ if ( count( $themes ) > 0 ) {
 
   /* get WP installed themes */
   $get_themes = get_themes();
-  
-  echo '<h3>Available Themes</h3>';
-  echo '<ul class="item-list">';
-  
+
   /* loop through the marketplace themes */
+  $premium_themes = array();
   foreach( $themes as $theme ) {
     
-    /* setup the item details */
-    $item_details = $api->item_details( $theme->item_id );
-    
-    $current_stylesheet = get_option( 'stylesheet' );
+    /* setup the defaults */
+    $content = '';
+    $installed = false;
+    $links = array();
+    $current_stylesheet = get_stylesheet();
+    $latest_version = $theme->version;
+    $item_id = $theme->item_id;
     $template = '';
     $stylesheet = '';
+    $title = $theme->theme_name;
+    $version = '';
+    $description = $theme->description;
+    $author = $theme->author_name;
+    $parent_theme = '';
+    $tags = '';
     
-    /* check if installed */
+    /* setup the item details */
+    $item_details = $api->item_details( $item_id );
+    
+    /* get installed theme information */
     foreach( $get_themes as $k => $v ) {
-      if ( $get_themes[$k]['Title'] == $theme->theme_name && $get_themes[$k]['Author Name'] == $theme->author_name ) {
+      if ( $get_themes[$k]['Title'] == $title && $get_themes[$k]['Author Name'] == $author && $template == '' ) {
         $template = $get_themes[$k]['Template'];
-        $stylesheet = $get_themes[$k]['Stylesheet'];
+      	$stylesheet = $get_themes[$k]['Stylesheet'];
+      	$title = $get_themes[$k]['Title'];
+      	$version = $get_themes[$k]['Version'];
+      	$description = $get_themes[$k]['Description'];
+      	$author = $get_themes[$k]['Author'];
+      	$screenshot = $get_themes[$k]['Screenshot'];
+      	$stylesheet_dir = $get_themes[$k]['Stylesheet Dir'];
+      	$template_dir = $get_themes[$k]['Template Dir'];
+      	$parent_theme = $get_themes[$k]['Parent Theme'];
+      	$theme_root = $get_themes[$k]['Theme Root'];
+      	$theme_root_uri = $get_themes[$k]['Theme Root URI'];
+      	$tags = $get_themes[$k]['Tags'];
+      	$installed = true;
         continue;
       }
     }
     
-    /* setup the links */
-    $install_actions = array();
+    $has_update = ( $installed && version_compare( $version, $latest_version, '<' ) ) ? TRUE : FALSE;
+    $details_url = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
+    $activate_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ), 'switch-theme_' . $template );
+    $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
+    $delete_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet, 'delete-theme_' . $stylesheet );
+    $delete_onclick = 'onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to delete the '%s' theme.\n\n'Cancel' to stop, 'OK' to delete." ), $title ) ) . "' );" . '"';
+    $install_url = wp_nonce_url( self_admin_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
+    $update_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id, 'upgrade-theme_' . $stylesheet );
+    $update_onclick = 'onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to update the '%s' theme. Any customizations you have made to theme files will be lost.\n\n'Cancel' to stop, 'OK' to delete." ), $title ) ) . "' );" . '"';
     
-    if ( $stylesheet && $template ) {
-      if ( $current_stylesheet == $stylesheet ) {
-        
-        /* current theme link */
-        $current_link = self_admin_url( 'themes.php' );
-        $install_actions['current'] = '<a href="' . $current_link .  '" class="disabled" title="' . esc_attr( sprintf( __( '&#8220;%s&#8221; is currently active' ), $theme->theme_name ) ) . '">' . __( 'Currently Active' ) . '</a>';
-
-      } else {
-        
-        /* activate link */
-        $activate_link = wp_nonce_url( 'admin.php?page=envato-wordpress-updater&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ), 'switch-theme_' . $template );
-        $install_actions['activate'] = '<a href="' . $activate_link .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;' ), $theme->theme_name ) ) . '">' . __( 'Activate' ) . '</a>';
-        
-        /* preview link */
-        $preview_link = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
-        $install_actions['preview'] = '<a href="' . $preview_link . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $theme->theme_name ) ) . '">' . __( 'Preview' ) . '</a>';
-        
-        /* delete link */
-        $delete_link = wp_nonce_url( 'admin.php?page=envato-wordpress-updater&action=delete&template=' . $template, 'delete-theme_' . $template );
-        $install_actions['delete'] = '<a href="' . $delete_link . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $theme->theme_name ) ) . '" onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to delete the '%s' theme.\n\n'Cancel' to stop, 'OK' to delete." ), $theme->theme_name ) ) . "' );" . '">' . __( 'Delete' ) . '</a>';
-        
-      }
-    } else {
+    /* Theme Title message */
+    $content.= '<h3>' . $title . ' ' . $latest_version . ' by ' . $author . '</h3>';
       
-      /* install link */
-      $install_link = wp_nonce_url( self_admin_url( 'admin.php?page=envato-wordpress-updater&action=install-theme&theme=' . $theme->item_id ), 'install-theme_' . $theme->item_id );
-      $install_actions['install'] = '<a href="' . $install_link .  '" class="installlink" title="' . esc_attr( sprintf( __( 'Install &#8220;%s&#8221;' ), $theme->theme_name ) ) . '">' . __( 'Install' ) . '</a>';
-      
+    /* Theme Description */
+    if ( $description ) {
+      $content.= '<p class="description">' . $description . '</p>';
     }
     
-    /* themeforest link */
-    $theme_link = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
-    $install_actions['theme_url'] = '<a href="' . $theme_link .  '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221; on ThemeForest ' ), $theme->theme_name ) ) . '">' . __( 'View on ThemeForest' ) . '</a>';
-      
-    $install_links = '<div class="update-info">' . implode( ' | ', $install_actions ) . '</div>';
+    /* Links list */
+    if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
+      $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Activate' ) . '</a>';
+      $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Preview' ) . '</a>';
+      $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
+      $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
+    }
     
-    /* echo the HTML */
-    echo '<li>';
-      echo '<div class="thumbnail"><img src="' . $item_details->thumbnail  . '" alt="' . $theme->theme_name . '" /></div>';
-      echo '
+    /**
+     * This horrible code lists the current theme options
+     * It was pulled from wp-admin/themes.php with minor tweaks
+     */
+    if ( $current_stylesheet == $stylesheet ) {
+      global $submenu;
+      $parent_file = 'themes.php';
+      $options = array();
+      if ( is_array( $submenu ) && isset( $submenu['themes.php'] ) ) {
+        foreach ( (array) $submenu['themes.php'] as $item ) {
+          if ( 'themes.php' == $item[2] || 'theme-editor.php' == $item[2] )
+            continue;
+          if ( ! empty( $submenu[$item[2]] ) ) {
+            $submenu[$item[2]] = array_values( $submenu[$item[2]] );
+            $menu_hook = get_plugin_page_hook($submenu[$item[2]][0][2], $item[2]);
+            if ( file_exists( ABSPATH . PLUGINDIR . "/{$submenu[$item[2]][0][2]}" ) || ! empty( $menu_hook ) )
+              $options[] = "<a href='admin.php?page={$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
+            else
+              $options[] = "<a href='{$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
+          } else if ( current_user_can( $item[1] ) ) {
+            if ( file_exists(ABSPATH . 'wp-admin/' . $item[2]) )
+              $options[] = "<a href='{$item[2]}'>{$item[0]}</a>";
+            else
+              $options[] = "<a href='themes.php?page={$item[2]}'>{$item[0]}</a>";
+          }
+        }
+      }
+      if ( ! empty( $options ) )
+        $content.= '<div class="update-info"><span>' . __( 'Options:' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
+    }
+    
+    /* Theme path information */
+    if ( current_user_can( 'edit_themes' ) && $installed ) {
+      if ( $parent_theme ) {
+         $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
+      } else {
+         $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
+      }
+    }
+    
+    /* Tags list */
+    if ( $tags ) {
+      $content.= '<p>' . __( 'Tags: ' ). join( ', ', $tags ) . '</p>';
+    }
+    
+    /* Upgrade/Install message */
+    if ( $has_update ) {
+      if ( ! current_user_can( 'update_themes' ) ) {
+				$content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+      } else {
+				$content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+      }
+		} else if ( ! $installed ) {
+		  if ( ! current_user_can( 'update_themes' ) ) {
+		    $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+		  } else {
+		    $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $install_url );
+		  }
+		}
+		
+    /* put the HTML into a variable */
+    $list_item = '
+    <li>
+      <div class="thumbnail">
+        <img src="' . $item_details->thumbnail  . '" alt="' . $title . '" />
+      </div>
       <div class="item-details">
-        <h3>' . $theme->theme_name . ' ' . $theme->version . ' by ' . $theme->author_name . '</h3>
-        ' . ( $theme->description ? '<p class="description">' . $theme->description . '</p>' : '' ) . '
-        ' . $install_links . '
-      </div>';
-    echo '</li>';
+        ' . $content . '
+      </div>
+    </li>';
+    
+    $premium_themes[] = array(
+      'current_theme' => ( $current_stylesheet == $stylesheet ? true : false ),
+      'list_item' => $list_item
+    );
+    
   }
-  echo '</ul>';
+  
+  /**
+   * Loop through all the premium themes.
+   * Separate out the current one, display it, & remove from array
+   * Display the other premium themes after edits to the array.
+   */
+  if ( ! empty( $premium_themes ) ) {
+    
+    $current_theme = array();
+    foreach ( $premium_themes as $k => $v ) {
+      if ( $premium_themes[$k]['current_theme'] == true ) {
+        $current_theme = $premium_themes[$k];
+        unset( $premium_themes[$k] );
+      }
+    }
+    
+    /* list current premium theme */
+    if ( ! empty( $current_theme ) ) {
+      _e( '<h3>Current Theme</h3>' );
+      echo '<ul class="item-list">';
+        echo $current_theme['list_item'];
+      echo '</ul>';
+    }
+    
+    /* list premium themes */
+    _e( '<h3>Available Themes</h3>' );
+    echo '<ul class="item-list">';
+    foreach ( $premium_themes as $k => $v )
+      echo $premium_themes[$k]['list_item'];
+    echo '</ul>';
+  }
 }

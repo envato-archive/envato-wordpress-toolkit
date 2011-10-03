@@ -36,5 +36,10 @@ div.error {
       width: 435px;
     }
       .item-list li .item-details h3 {
+        font-size: 1.17em;
         margin-top: 0px;
+        margin-bottom: 10px;
+      }
+      .item-list li .item-details .update-info {
+        font-size: 13px;
       }

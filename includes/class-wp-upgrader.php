@@ -21,4 +21,27 @@ class Envato_Theme_Upgrader extends Theme_Upgrader {
     parent::install_strings();
     $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;' );
   }
+  
+  function upgrade( $theme, $package ) {
+
+    $this->init();
+    $this->upgrade_strings();
+
+    $options = array(
+      'package' => $package,
+      'destination' => WP_CONTENT_DIR . '/themes',
+      'clear_destination' => true,
+      'clear_working' => true,
+      'hook_extra' => array(
+        'theme' => $theme
+      )
+    );
+
+		$this->run( $options );
+
+    if ( ! $this->result || is_wp_error($this->result) )
+      return $this->result;
+
+		return true;
+	}
 }

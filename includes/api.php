@@ -174,7 +174,7 @@ class Envato_Protected_API {
    */
   public function api_errors() {
     if ( ! empty( $this->errors['errors'] ) )
-      return $this->errors;
+      return $this->errors['errors'];
   }
   
   /**

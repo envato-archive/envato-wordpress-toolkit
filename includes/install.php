@@ -9,7 +9,14 @@
  * @since       1.0
  */
 class Envato_Install {
-  
+  /**
+   * The API object
+   *
+   * @since   1.0
+   * @access  private
+   *
+   * @var     object
+   */
   protected $api;
   
   /**
@@ -41,10 +48,10 @@ class Envato_Install {
   function install_theme( $theme, $themes ) {
     global $current_screen;
     
+    check_admin_referer( 'install-theme_' . $theme );
+    
     if ( ! current_user_can( 'install_themes' ) )
       wp_die( __( 'You do not have sufficient permissions to install themes for this site.' ) );
-
-    check_admin_referer( 'install-theme_' . $theme );
     
     /* setup theme info in $api array */
     $api = (object) array();
@@ -58,7 +65,7 @@ class Envato_Install {
     
     $title = sprintf( __( 'Installing Theme: %s' ), $api->name . ' ' . $api->version );
     $nonce = 'install-theme_' . $theme;
-    $url = 'admin.php?page=envato-wordpress-updater&action=install-theme&theme=' . $theme;
+    $url = 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=install-theme&theme=' . $theme;
     $type = 'web';
     
     /* trick WP into thinking it's the themes page for the icon32 */
