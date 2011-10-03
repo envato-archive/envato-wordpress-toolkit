@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'EWPU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
 /**
- * User API info
+ * User API verification form
  *
  * @package     Envato WordPress Updater
  * @author      Derek Herman <derek@valendesigns.com>
@@ -17,3 +17,6 @@ echo '
     <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save User Settings', 'envato' ) . '" />
   </p>
 </form>';
+
+/* End of file account.php */
+/* Location: ./views/account.php */

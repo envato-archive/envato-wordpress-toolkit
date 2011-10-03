@@ -31,7 +31,7 @@ class Envato_Install {
    *
    * @return    void
    */
-	function __construct( $api ) {
+  function __construct( $api ) {
     $this->api = $api;
   }
 
@@ -77,7 +77,7 @@ class Envato_Install {
     /* install the theme */
     $upgrader->install( $this->api->wp_download( $theme ) );
   }
-
 }
+
 /* End of file install.php */
 /* Location: ./includes/install.php */

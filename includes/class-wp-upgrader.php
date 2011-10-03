@@ -37,11 +37,14 @@ class Envato_Theme_Upgrader extends Theme_Upgrader {
       )
     );
 
-		$this->run( $options );
+    $this->run( $options );
 
     if ( ! $this->result || is_wp_error($this->result) )
       return $this->result;
 
-		return true;
-	}
+    return true;
+  }
 }
+
+/* End of file class-wp-upgrader.php */
+/* Location: ./includes/class-wp-upgrader.php */

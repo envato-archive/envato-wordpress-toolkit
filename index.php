@@ -142,7 +142,7 @@ class Envato_WordPress_Updater {
    * @access   private
    * @since    1.0
    *
-   * @return   string   Returns the verification form
+   * @return   string   Returns the verification form & themes list
    */
   public function _envato_menu_page() {
     if ( ! current_user_can( 'manage_options' ) )
@@ -178,20 +178,21 @@ class Envato_WordPress_Updater {
     /* run actions not loaded in admin init */
     if ( isset( $_GET['action'] ) ) {
       if ( 'install-theme' == $_GET['action'] ) {
-        if ( isset( $_GET['theme'] ) && $api )
+        if ( isset( $_GET['theme'] ) && $api ) {
           $envato_install =& new Envato_Install( $api );
           $envato_install->install_theme( $_GET['theme'], $themes );
+        }
       } else if ( 'upgrade-theme' == $_GET['action'] ) {
-        if ( isset( $_GET['theme'] ) && isset( $_GET['item_id'] ) && $api )
+        if ( isset( $_GET['theme'] ) && isset( $_GET['item_id'] ) && $api ) {
           $envato_upgrade =& new Envato_Upgrade( $api );
           $envato_upgrade->upgrade_theme( $_GET['theme'], $_GET['item_id'] );
+        }
       }
     /* display normal views */
     } else {
       echo '<div class="wrap">';
         echo '<div id="icon-themes" class="icon32"></div><h2>' . EWPU_PLUGIN_NAME . '</h2>';
         include( EWPU_PLUGIN_DIR . '/views/account.php' );
-        
         if ( empty( $errors ) ) {
           include( EWPU_PLUGIN_DIR . '/views/themes.php' );
         }

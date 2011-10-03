@@ -131,17 +131,17 @@ if ( count( $themes ) > 0 ) {
     /* Upgrade/Install message */
     if ( $has_update ) {
       if ( ! current_user_can( 'update_themes' ) ) {
-				$content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+        $content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
       } else {
-				$content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+        $content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $update_url, $update_onclick );
       }
-		} else if ( ! $installed ) {
-		  if ( ! current_user_can( 'update_themes' ) ) {
-		    $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
-		  } else {
-		    $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $install_url );
-		  }
-		}
+    } else if ( ! $installed ) {
+      if ( ! current_user_can( 'update_themes' ) ) {
+        $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+      } else {
+        $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $install_url );
+      }
+    }
 		
     /* put the HTML into a variable */
     $list_item = '
@@ -167,7 +167,6 @@ if ( count( $themes ) > 0 ) {
    * Display the other premium themes after edits to the array.
    */
   if ( ! empty( $premium_themes ) ) {
-    
     $current_theme = array();
     foreach ( $premium_themes as $k => $v ) {
       if ( $premium_themes[$k]['current_theme'] == true ) {
@@ -192,3 +191,6 @@ if ( count( $themes ) > 0 ) {
     echo '</ul>';
   }
 }
+
+/* End of file themes.php */
+/* Location: ./views/themes.php */

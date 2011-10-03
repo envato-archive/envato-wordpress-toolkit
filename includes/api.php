@@ -208,9 +208,21 @@ class Envato_Protected_API {
       $this->set_error( 'api_error', $data->error ); 
   }
   
+  /**
+   * Helper function to print arrays to the screen
+   *
+   * @since   1.0
+   * @access  public
+   *
+   * @param   array         The array to print out
+   * @return  string
+   */
   public function pretty_print( $array ) {
     echo '<pre>';
     print_r( $array );
     echo '</pre>';
   }
 }
+
+/* End of file api.php */
+/* Location: ./includes/api.php */

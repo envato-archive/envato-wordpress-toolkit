@@ -31,7 +31,7 @@ class Envato_Upgrade {
    *
    * @return    void
    */
-	function __construct( $api ) {
+  function __construct( $api ) {
     $this->api = $api;
   }
 
@@ -66,7 +66,6 @@ class Envato_Upgrade {
     /* upgrade the theme */
     $upgrader->upgrade( $theme, $this->api->wp_download( $item_id ) );
   }
-
 }
 
 /* End of file upgrade.php */
