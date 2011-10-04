@@ -154,8 +154,7 @@ class Envato_WordPress_Updater {
     $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
     $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
     
-    if ( $user_name || $api_key )
-      $api =& new Envato_Protected_API( $user_name, $api_key );
+    $api =& new Envato_Protected_API( $user_name, $api_key );
     
     /* get purchased marketplace themes */
     $themes = $api->wp_list_themes();
@@ -163,7 +162,7 @@ class Envato_WordPress_Updater {
     /* display API errors */
     if ( $errors = $api->api_errors() ) {
       foreach( $errors as $k => $v ) {
-        if ( $k !== 'http_code' )
+        if ( $k !== 'http_code' && ( $user_name || $api_key ) )
           echo '<div class="error"><p>' . $v . '</p></div>';
       }
     }
