@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Envato WordPress Updater
- * Plugin URI:
- * Description:
- * Version: 1.0 beta
+ * Plugin URI: 
+ * Description: Super awesome WordPress install/upgrade utility for Envato Marketplace hosted files.
+ * Version: 1.0-beta
  * Author: Derek Herman
  * Author URI: http://valendesigns.com
  */
@@ -36,7 +36,7 @@ class Envato_WordPress_Updater {
     /**
      * Plugin Version
      */
-    define( 'EWPU_PLUGIN_VER', '1.0' );
+    define( 'EWPU_PLUGIN_VER', '1.0-beta' );
     
     /**
      * Plugin Name
@@ -169,9 +169,9 @@ class Envato_WordPress_Updater {
     
     /* display update messages */
     if ( empty( $errors ) ) {
-      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated"><p><strong>' . __( 'User Settings Updated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated"><p><strong>' . __( 'Theme Activated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated"><p><strong>' . __( 'Theme Deleted.', 'envato' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'User Settings Updated.', 'envato' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Activated.', 'envato' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Deleted.', 'envato' ) . '</strong></p></div>' : '';
     }
 
     /* run actions not loaded in admin init */
@@ -300,7 +300,7 @@ class Envato_WordPress_Updater {
     $this->_admin_init_before();
     register_setting( EWPU_PLUGIN_SLUG, EWPU_PLUGIN_SLUG );
     add_settings_section( 'user_account_info', 'User Account Information', array( &$this, '_user_account_info' ), EWPU_PLUGIN_SLUG );
-    add_settings_field( 'user_name', 'Username', array( &$this, '_section_user_name' ), EWPU_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_field( 'user_name', 'Marketplace Username', array( &$this, '_section_user_name' ), EWPU_PLUGIN_SLUG, 'user_account_info' );
     add_settings_field( 'api_key', 'Secret API Key', array( &$this, '_section_api_key' ), EWPU_PLUGIN_SLUG, 'user_account_info' );
   }
   
@@ -313,7 +313,7 @@ class Envato_WordPress_Updater {
    * @return   string
    */
   public function _user_account_info() {
-    _e( 'A description on how to use the Envato API goes here.', 'envato' );
+    _e( 'To obtain your API Key, please visit your "My Settings" page on an Envato Marketplace.', 'envato' );
   }
   
   /**
@@ -339,7 +339,7 @@ class Envato_WordPress_Updater {
    */
   public function _section_api_key() {
     $options = get_option( EWPU_PLUGIN_SLUG );
-    echo '<input type="text" class="regular-text" name="' . EWPU_PLUGIN_SLUG . '[api_key]" value="' . esc_attr( $options['api_key'] ) . '" />';
+    echo '<input type="password" class="regular-text" name="' . EWPU_PLUGIN_SLUG . '[api_key]" value="' . esc_attr( $options['api_key'] ) . '" />';
   }
   
   /**

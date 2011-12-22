@@ -62,13 +62,13 @@ if ( count( $themes ) > 0 ) {
     $activate_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ), 'switch-theme_' . $template );
     $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
     $delete_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet, 'delete-theme_' . $stylesheet );
-    $delete_onclick = 'onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to delete the '%s' theme.\n\n'Cancel' to stop, 'OK' to delete." ), $title ) ) . "' );" . '"';
+    $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __("You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update."), $title ) ) . '\') ) {return true;}return false;"';
     $install_url = wp_nonce_url( self_admin_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
     $update_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id, 'upgrade-theme_' . $stylesheet );
-    $update_onclick = 'onclick="' . "return confirm( '" . esc_js( sprintf( __( "You are about to update the '%s' theme. Any customizations you have made to theme files will be lost.\n\n'Cancel' to stop, 'OK' to delete." ), $title ) ) . "' );" . '"';
+    $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __("Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.") ) . '\') ) {return true;}return false;"';
     
     /* Theme Title message */
-    $content.= '<h3>' . $title . ' ' . $latest_version . ' by ' . $author . '</h3>';
+    $content.= '<h3>' . $title . ' ' . $version . ' by ' . $author . '</h3>';
       
     /* Theme Description */
     if ( $description ) {
@@ -80,11 +80,12 @@ if ( count( $themes ) > 0 ) {
       $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Activate' ) . '</a>';
       $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Preview' ) . '</a>';
       $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
+      $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details' ), $latest_version ) ) . '</a>';
       $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
     }
     
     /**
-     * This horrible code lists the current theme options
+     * This ugly code lists the current theme options
      * It was pulled from wp-admin/themes.php with minor tweaks
      */
     if ( $current_stylesheet == $stylesheet ) {
@@ -131,15 +132,15 @@ if ( count( $themes ) > 0 ) {
     /* Upgrade/Install message */
     if ( $has_update ) {
       if ( ! current_user_can( 'update_themes' ) ) {
-        $content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p></div>', $title, $details_url, $latest_version );
       } else {
-        $content.= sprintf( '<p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
       }
     } else if ( ! $installed ) {
       if ( ! current_user_can( 'update_themes' ) ) {
-        $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p>', $title, $details_url, $latest_version );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p></div>', $title, $details_url, $latest_version );
       } else {
-        $content.= sprintf( '<p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p>', $title, $details_url, $latest_version, $install_url );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
       }
     }
 		

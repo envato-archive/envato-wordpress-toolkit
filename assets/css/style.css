@@ -8,21 +8,32 @@ div.error {
 }
 #api-verification {
   clear: both;
-  margin-bottom: 40px;
+  margin: 0 20px 40px 0;
   overflow: hidden;
-  width: 535px;
+  width: 100%;
+  max-width: 800px;
+  min-width: 500;
 }
+  #api-verification .regular-text {
+    width: 100%;
+  }
 .right {
   float: right;
   margin-right: 10px;
 }
 .item-list {
+  margin-right: 20px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+  min-width: 500px;
 }
   .item-list li {
     display: block;
     margin: 0 20px 40px 0;
-    overflow: hidden;
-    width: 535px;
+    float: left;
+    width: 100%;
+    min-width: 500px;
   }
     .item-list li .thumbnail {
       background: #fff;
@@ -30,10 +41,18 @@ div.error {
       float: left;
       padding: 4px;
       width: 80px;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px;
     }
+      .item-list li .thumbnail img {
+        display: block;
+      }
     .item-list li .item-details {
       float: right;
-      width: 435px;
+      width: 80%;
+      max-width: 700px;
+      min-width: 400px;
     }
       .item-list li .item-details h3 {
         font-size: 1.17em;
@@ -42,4 +61,10 @@ div.error {
       }
       .item-list li .item-details .update-info {
         font-size: 13px;
+      }
+      .item-list li .item-details .updated p {
+        margin: 1px;
+      }
+      .item-list li .item-details a {
+        text-decoration: none;
       }
