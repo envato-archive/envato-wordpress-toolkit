@@ -1,9 +1,9 @@
 === Envato WordPress Updater ===
-Contributors: valendesigns
+Contributors: original project by valendesigns - https://github.com/envato/envato-wordpress-updater
 Tags: install, update, api, envato, theme
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.0
+Stable tag: 1.1
 
 WordPress install/upgrade utility for Envato Marketplace hosted files.
 
@@ -31,6 +31,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.1 =
+* Made the plugin check php settings and force it to increase its execution time to ensure large themes can finish downloading
 
 = 1.0 =
 * Initial release with auto theme install and update.
