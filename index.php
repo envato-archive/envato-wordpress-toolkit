@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Envato WordPress Updater
- * Plugin URI: 
+ * Plugin URI: https://github.com/envato/envato-wordpress-updater
  * Description: WordPress install/upgrade utility for Envato Marketplace hosted files.
  * Version: 1.0
  * Author: Derek Herman
