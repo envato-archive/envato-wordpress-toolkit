@@ -51,7 +51,7 @@ class Envato_Install {
     check_admin_referer( 'install-theme_' . $theme );
     
     if ( ! current_user_can( 'install_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to install themes for this site.' ) );
+      wp_die( __( 'You do not have sufficient permissions to install themes for this site.', 'envato' ) );
     
     /* setup theme info in $api array */
     $api = (object) array();

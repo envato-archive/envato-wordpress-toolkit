@@ -51,7 +51,7 @@ class Envato_Upgrade {
     check_admin_referer( 'upgrade-theme_' . $theme );
     
     if ( ! current_user_can( 'update_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
     
     $title = __( 'Update Theme' );
     $nonce = 'upgrade-theme_' . $theme;

@@ -16,12 +16,12 @@ if ( class_exists( 'Theme_Upgrader' ) ) {
   class Envato_Theme_Upgrader extends Theme_Upgrader {
     function upgrade_strings() {
       parent::upgrade_strings();
-      $this->strings['downloading_package'] = __( 'Downloading upgrade package from the Envato API&#8230;' );
+      $this->strings['downloading_package'] = __( 'Downloading upgrade package from the Envato API&#8230;', 'envato' );
     }
   
     function install_strings() {
       parent::install_strings();
-      $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;' );
+      $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;', 'envato' );
     }
     
     function upgrade( $theme, $package ) {

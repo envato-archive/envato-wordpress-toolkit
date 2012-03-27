@@ -62,10 +62,10 @@ if ( count( $themes ) > 0 ) {
     $activate_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ), 'switch-theme_' . $template );
     $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
     $delete_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet, 'delete-theme_' . $stylesheet );
-    $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __("You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update."), $title ) ) . '\') ) {return true;}return false;"';
+    $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato' ), $title ) ) . '\') ) {return true;}return false;"';
     $install_url = wp_nonce_url( self_admin_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
     $update_url = wp_nonce_url( 'admin.php?page=' . EWPU_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id, 'upgrade-theme_' . $stylesheet );
-    $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __("Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.") ) . '\') ) {return true;}return false;"';
+    $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato' ) ) . '\') ) {return true;}return false;"';
     
     /* Theme Title message */
     $content.= '<h3>' . $title . ' ' . $version . ' by ' . $author . '</h3>';
@@ -77,10 +77,10 @@ if ( count( $themes ) > 0 ) {
     
     /* Links list */
     if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
-      $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Activate' ) . '</a>';
-      $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $title ) ) . '">' . __( 'Preview' ) . '</a>';
-      $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
-      $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details' ), $latest_version ) ) . '</a>';
+      $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Activate', 'envato' ) . '</a>';
+      $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Preview', 'envato' ) . '</a>';
+      $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
+      $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '</a>';
       $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
     }
     
@@ -112,15 +112,15 @@ if ( count( $themes ) > 0 ) {
         }
       }
       if ( ! empty( $options ) )
-        $content.= '<div class="update-info"><span>' . __( 'Options:' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
+        $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
     }
     
     /* Theme path information */
     if ( current_user_can( 'edit_themes' ) && $installed ) {
       if ( $parent_theme ) {
-         $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
+         $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
       } else {
-         $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
+         $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
       }
     }
     
@@ -132,15 +132,15 @@ if ( count( $themes ) > 0 ) {
     /* Upgrade/Install message */
     if ( $has_update ) {
       if ( ! current_user_can( 'update_themes' ) ) {
-        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p></div>', $title, $details_url, $latest_version );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
       } else {
-        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.') . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
       }
     } else if ( ! $installed ) {
       if ( ! current_user_can( 'update_themes' ) ) {
-        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.') . '</strong></p></div>', $title, $details_url, $latest_version );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
       } else {
-        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __('%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.') . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
+        $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
       }
     }
 		
@@ -179,14 +179,14 @@ if ( count( $themes ) > 0 ) {
     /* list current premium theme */
     if ( ! empty( $current_theme ) ) {
       _e( '<h3>Current Theme</h3>' );
-      echo '<ul class="item-list">';
+      echo '<ul class="ewpu-item-list">';
         echo $current_theme['list_item'];
       echo '</ul>';
     }
     
     /* list premium themes */
     _e( '<h3>Available Themes</h3>' );
-    echo '<ul class="item-list">';
+    echo '<ul class="ewpu-item-list">';
     foreach ( $premium_themes as $k => $v )
       echo $premium_themes[$k]['list_item'];
     echo '</ul>';
