@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Updater
  * Plugin URI: https://github.com/envato/envato-wordpress-updater
  * Description: WordPress install/upgrade utility for Envato Marketplace hosted files.
- * Version: 1.0
+ * Version: 1.1
  * Author: Derek Herman
  * Author URI: http://valendesigns.com
  */
@@ -33,10 +33,16 @@ class Envato_WordPress_Updater {
    * @access    private
    */
   protected function _constants() {
+    
+    /**
+     * Maximum request time
+     */
+    define( 'EWPU_PLUGIN_MAX_EXECUTION_TIME' , 60 * 5);
+    
     /**
      * Plugin Version
      */
-    define( 'EWPU_PLUGIN_VER', '1.0' );
+    define( 'EWPU_PLUGIN_VER', '1.1' );
     
     /**
      * Plugin Name
@@ -99,7 +105,27 @@ class Envato_WordPress_Updater {
      */
     add_filter( 'install_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'update_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
+    add_filter( 'http_request_args', array( &$this , '_http_request_args' ), 10, 1 );
   }
+  
+  /**
+   * Force PHP to extend max_execution_time to ensure larger themes can download
+   *
+   * @access   private
+   * @since    1.1
+   */
+  public function _http_request_args($r)
+  {
+    //max_execution_time    
+    
+    if ((int)ini_get("max_execution_time") <  EWPU_PLUGIN_MAX_EXECUTION_TIME)
+    {
+        ini_set("max_execution_time", EWPU_PLUGIN_MAX_EXECUTION_TIME);
+    }
+
+    $r['timeout'] = EWPU_PLUGIN_MAX_EXECUTION_TIME;
+    return $r;
+  }    
   
   /**
    * Adds the Envato menu item
@@ -150,7 +176,7 @@ class Envato_WordPress_Updater {
     
     /* read in existing API value from database */
     $options = get_site_option( EWPU_PLUGIN_SLUG );
-
+    
     $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
     $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
     
@@ -158,7 +184,7 @@ class Envato_WordPress_Updater {
     
     /* get purchased marketplace themes */
     $themes = $api->wp_list_themes();
-
+    
     /* display API errors */
     if ( $errors = $api->api_errors() ) {
       foreach( $errors as $k => $v ) {
