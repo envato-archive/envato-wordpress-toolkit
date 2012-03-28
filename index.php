@@ -1,4 +1,4 @@
-_site)<?php
+<?php
 /**
  * Plugin Name: Envato WordPress Updater
  * Plugin URI: https://github.com/envato/envato-wordpress-updater
