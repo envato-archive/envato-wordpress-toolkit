@@ -372,6 +372,8 @@ class Envato_WordPress_Updater {
   /**
    * Force PHP to extend max_execution_time to ensure larger themes can download
    *
+   * @author    armanm
+   *
    * @access    private
    * @since     1.0
    */
