@@ -49,6 +49,11 @@ class Envato_WordPress_Updater {
     define( 'EWPU_PLUGIN_SLUG', 'envato-wordpress-updater' );
     
     /**
+     * Maximum request time
+     */
+    define( 'EWPU_PLUGIN_MAX_EXECUTION_TIME' , 60 * 5);
+    
+    /**
      * Plugin Directory Path
      */
     define( 'EWPU_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) );
@@ -99,6 +104,7 @@ class Envato_WordPress_Updater {
      */
     add_filter( 'install_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'update_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
+    add_filter( 'http_request_args', array( &$this , '_http_request_args' ), 10, 1 );
   }
   
   /**
@@ -362,6 +368,22 @@ class Envato_WordPress_Updater {
     }
     return $actions;
   }
+  
+  /**
+   * Force PHP to extend max_execution_time to ensure larger themes can download
+   *
+   * @access    private
+   * @since     1.0
+   */
+  public function _http_request_args( $r ){
+    if ( (int) ini_get( 'max_execution_time' ) <  EWPU_PLUGIN_MAX_EXECUTION_TIME ) {
+      ini_set( 'max_execution_time', EWPU_PLUGIN_MAX_EXECUTION_TIME );
+    }
+
+    $r['timeout'] = EWPU_PLUGIN_MAX_EXECUTION_TIME;
+    return $r;
+  }
+  
 }
 
 /**

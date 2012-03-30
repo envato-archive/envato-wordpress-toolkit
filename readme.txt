@@ -34,3 +34,4 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 = 1.0 =
 * Initial release with auto theme install and update.
+* Force an increase to 'max_execution_time' and ensure large themes finish downloading.
