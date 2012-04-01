@@ -1,12 +1,12 @@
-<?php if ( ! defined( 'EWPU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
+<?php if ( ! defined( 'EWPTU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
 /**
  * Envato Protected API
  *
  * Wrapper class for the Envato marketplace protected API methods specific
- * to the Envato WordPress Updater plugin.
+ * to the Envato WordPress Theme Updater plugin.
  *
  * @package     WordPress
- * @subpackage  Envato WordPress Updater
+ * @subpackage  Envato WordPress Theme Updater
  * @author      Derek Herman <derek@envato.com>
  * @since       1.0
  */ 

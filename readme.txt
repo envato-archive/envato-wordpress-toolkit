@@ -1,11 +1,11 @@
-=== Envato WordPress Updater ===
+=== Envato WordPress Theme Updater ===
 Contributors: valendesigns
-Tags: install, update, api, envato, theme
+Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.0
+Stable tag: 1.1
 
-WordPress install/upgrade utility for Envato Marketplace hosted files.
+WordPress install & upgrade utility for Envato Marketplace hosted themes.
 
 == Description ==
 
@@ -25,12 +25,17 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Installation ==
 
-1. Upload the `envato-wordpress-updater` folder to the `/wp-content/plugins/` directory
+1. Upload the `envato-wordpress-theme-updater` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress.
 3. To establish an Envato Marketplace API connection navigate to the `Envato Updater` page and insert your Marketplace username and secret API key in the designated input fields. To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces.
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.1 =
+* Gutted the unnecessary files and classes.
+* Renamed the plugin and moved functions into a single class.
+* Updated strings for future Internationalization.
 
 = 1.0 =
 * Initial release with auto theme install and update.

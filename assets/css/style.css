@@ -1,7 +1,7 @@
 /* -------------------------------------------------- 
-  :: Envato WordPress Updater 
+  :: Envato WordPress Theme Updater 
   ---------------------------------------------------*/
-#adminmenu li.current.toplevel_page_envato-wordpress-updater .wp-menu-image img { opacity: 1; filter: alpha(opacity=100); }
+#adminmenu li.current.toplevel_page_envato-wordpress-theme-updater .wp-menu-image img { opacity: 1; filter: alpha(opacity=100); }
 div.updated, 
 div.error                             { margin-left: 0px; }
 #api-verification                     { clear: both; margin: 0 20px 40px 0; overflow: hidden; width: 100%; max-width: 800px; min-width: 500; }
