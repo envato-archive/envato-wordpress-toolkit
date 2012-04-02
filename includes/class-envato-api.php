@@ -1,12 +1,12 @@
-<?php if ( ! defined( 'EWPTU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
+<?php if ( ! defined( 'EWPT_PLUGIN_VER') ) exit( 'No direct script access allowed' );
 /**
  * Envato Protected API
  *
  * Wrapper class for the Envato marketplace protected API methods specific
- * to the Envato WordPress Theme Updater plugin.
+ * to the Envato WordPress Toolkit plugin.
  *
  * @package     WordPress
- * @subpackage  Envato WordPress Theme Updater
+ * @subpackage  Envato WordPress Toolkit
  * @author      Derek Herman <derek@envato.com>
  * @since       1.0
  */ 
@@ -187,7 +187,7 @@ class Envato_Protected_API {
    * @return  object        The results of the curl request.
    */
   protected function curl( $url ) {
-    if ( ! isset( $url ) ) 
+    if ( empty( $url ) ) 
       return false;
 
     $ch = curl_init( $url );
@@ -224,5 +224,5 @@ class Envato_Protected_API {
   }
 }
 
-/* End of file api.php */
-/* Location: ./includes/api.php */
+/* End of file class-envato-api.php */
+/* Location: ./includes/class-envato-api.php */

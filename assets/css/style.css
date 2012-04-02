@@ -1,19 +1,19 @@
 /* -------------------------------------------------- 
-  :: Envato WordPress Theme Updater 
+  :: Envato WordPress Toolkit 
   ---------------------------------------------------*/
-#adminmenu li.current.toplevel_page_envato-wordpress-theme-updater .wp-menu-image img { opacity: 1; filter: alpha(opacity=100); }
+#adminmenu li.current.toplevel_page_envato-wordpress-toolkit .wp-menu-image img { opacity: 1; filter: alpha(opacity=100); }
 div.updated, 
-div.error                             { margin-left: 0px; }
-#api-verification                     { clear: both; margin: 0 20px 40px 0; overflow: hidden; width: 100%; max-width: 800px; min-width: 500; }
-#api-verification .regular-text       { width: 100%; }
-#api-verification .right              { float: right; margin-right: 10px; }
-.ewpu-item-list                       { margin-right: 20px; overflow: hidden; width: 100%; max-width: 800px; min-width: 500px; }
-.ewpu-item-list li                    { display: block; margin: 0 20px 40px 0; float: left; width: 100%; min-width: 500px; }
-.ewpu-item-list li .thumbnail         { background: #fff; border: 1px solid #ccc; float: left; padding: 4px; width: 80px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
-.ewpu-item-list li .thumbnail img     { display: block; }
-.ewpu-item-list li .item-details      { float: right; width: 80%; max-width: 700px; min-width: 400px; }
-.ewpu-item-list li .item-details h3   { font-size: 1.17em; margin-top: 0px; margin-bottom: 10px; }
+div.error { margin-left: 0px; }
+#api-verification { clear: both; margin: 0 20px 40px 0; overflow: hidden; width: 100%; max-width: 800px; min-width: 500; }
+#api-verification .regular-text { width: 100%; }
+#api-verification .right { float: right; margin-right: 10px; }
+.ewpu-item-list { margin-right: 20px; overflow: hidden; width: 100%; max-width: 800px; min-width: 500px; }
+.ewpu-item-list li { display: block; margin: 0 20px 40px 0; float: left; width: 100%; min-width: 500px; }
+.ewpu-item-list li .thumbnail { background: #fff; border: 1px solid #ccc; float: left; padding: 4px; width: 80px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+.ewpu-item-list li .thumbnail img { display: block; }
+.ewpu-item-list li .item-details { float: right; width: 80%; max-width: 700px; min-width: 400px; }
+.ewpu-item-list li .item-details h3 { font-size: 1.17em; margin-top: 0px; margin-bottom: 10px; }
 .ewpu-item-list li .item-details .update-info { font-size: 13px; }
 .ewpu-item-list li .item-details .updated { margin-top: 10px; }
 .ewpu-item-list li .item-details .updated p { margin: 1px; }
-.ewpu-item-list li .item-details a    { text-decoration: none; }
+.ewpu-item-list li .item-details a { text-decoration: none; }

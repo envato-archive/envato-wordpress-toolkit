@@ -1,8 +1,8 @@
-<?php if ( ! defined( 'EWPTU_PLUGIN_VER') ) exit( 'No direct script access allowed' );
+<?php if ( ! defined( 'EWPT_PLUGIN_VER') ) exit( 'No direct script access allowed' );
 /**
  * Include the parent class
  */
-if ( ! class_exists( 'Theme_Upgrader' ) && isset( $_GET['page'] ) && $_GET['page'] == EWPTU_PLUGIN_SLUG )
+if ( ! class_exists( 'Theme_Upgrader' ) && isset( $_GET['page'] ) && $_GET['page'] == EWPT_PLUGIN_SLUG )
   include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 
 /**
@@ -11,7 +11,7 @@ if ( ! class_exists( 'Theme_Upgrader' ) && isset( $_GET['page'] ) && $_GET['page
  * This class exists to make modifications to the text during download &
  * to alter the upgrade option array before fetching them for download.
  *
- * @package     Envato WordPress Theme Updater
+ * @package     Envato WordPress Toolkit
  * @author      Derek Herman <derek@valendesigns.com>
  * @since       1.0
  */

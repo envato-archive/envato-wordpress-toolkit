@@ -1,15 +1,15 @@
-=== Envato WordPress Theme Updater ===
+=== Envato WordPress Toolkit ===
 Contributors: valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.1
 Stable tag: 1.1
 
-WordPress install & upgrade utility for Envato Marketplace hosted themes.
+WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
 
 == Description ==
 
-This utility plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and updating those themes. Basically, users that have purchased a theme from ThemeForest.net can now install and update all of the themes that take advantage of these new methods. 
+This toolkit plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and updating those themes. Basically, users that have purchased a theme from ThemeForest.net can now install and update all of the themes that take advantage of these new methods. 
 
 For end users, all that's required to get started is an Envato Marketplace username & API key, and to have purchased one of the many WordPress themes found on ThemeForest.net. 
 
@@ -25,7 +25,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Installation ==
 
-1. Upload the `envato-wordpress-theme-updater` folder to the `/wp-content/plugins/` directory
+1. Upload the `envato-wordpress-toolkit` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the `Plugins` menu in WordPress.
 3. To establish an Envato Marketplace API connection navigate to the `Envato Updater` page and insert your Marketplace username and secret API key in the designated input fields. To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces.
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
