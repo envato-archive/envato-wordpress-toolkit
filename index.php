@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
- * Version: 1.1
+ * Version: 1.2
  * Author: Derek Herman
  * Author URI: http://valendesigns.com
  */
@@ -46,7 +46,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.1' );
+    define( 'EWPT_PLUGIN_VER', '1.2' );
     
     /**
      * Plugin Name
@@ -450,7 +450,7 @@ class Envato_WP_Toolkit {
    */
   public function _admin_init() {
     $this->_admin_init_before();
-    register_setting( EWPT_PLUGIN_SLUG . '-group', EWPT_PLUGIN_SLUG );
+    register_setting( EWPT_PLUGIN_SLUG, EWPT_PLUGIN_SLUG );
     add_settings_section( 'user_account_info', 'User Account Information', array( &$this, '_user_account_info' ), EWPT_PLUGIN_SLUG );
     add_settings_field( 'user_name', 'Marketplace Username', array( &$this, '_section_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
     add_settings_field( 'api_key', 'Secret API Key', array( &$this, '_section_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
