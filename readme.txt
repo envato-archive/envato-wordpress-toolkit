@@ -32,6 +32,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
+= 1.3 =
+* Added caching to the Envato Marketplace API requests.
+
 = 1.2 =
 * Updated register_setting group ID bug.
 

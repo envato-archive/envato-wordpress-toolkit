@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
- * Version: 1.2
+ * Version: 1.3
  * Author: Derek Herman
  * Author URI: http://valendesigns.com
  */
@@ -46,7 +46,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.2' );
+    define( 'EWPT_PLUGIN_VER', '1.3' );
     
     /**
      * Plugin Name
@@ -465,7 +465,7 @@ class Envato_WP_Toolkit {
    * @return   string
    */
   public function _user_account_info() {
-    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces.', 'envato' );
+    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces. Once a valid connection has been made any changes to the API key below for this username will not effect the results for 5 minutes because they\'re cached in the database. If you have already made an API connection and just purchase a theme and it\'s not showing up, wait five minutes and refresh the page. If the theme is still not showing up, it\'s possible the author has not made it available for auto install yet.', 'envato' );
   }
   
   /**

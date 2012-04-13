@@ -14,181 +14,330 @@ class Envato_Protected_API {
   /**
    * The buyer's Username
    *
-   * @since   1.0
-   * @access  public
+   * @var       string
    *
-   * @var     string
+   * @access    public
+   * @since     1.0
    */
   public $user_name;
   
   /**
    * The buyer's API Key
    *
-   * @since   1.0
-   * @access  public
+   * @var       string
    *
-   * @var     string
+   * @access    public
+   * @since     1.0
    */
   public $api_key;
   
   /**
    * The default API URL
    *
-   * @since   1.0
-   * @access  private
+   * @var       string
    *
-   * @var     string
+   * @access    private
+   * @since     1.0
    */
   protected $public_url = 'http://marketplace.envato.com/api/edge/set.json';
   
   /**
    * Error messages
    *
-   * @since   1.0
-   * @access  public
+   * @var       array
    *
-   * @var     array
+   * @access    public
+   * @since     1.0
    */
   public $errors = array( 'errors' => '' );
   
   /**
    * Class contructor method
    *
-   * @param   string        The buyer's Username
-   * @param   string        The buyer's API Key can be accessed on the marketplaces via My Account -> My Settings -> API Key
-   * @return  array|void    Returns error messages if any, or void.
+   * @param     string      The buyer's Username
+   * @param     string      The buyer's API Key can be accessed on the marketplaces via My Account -> My Settings -> API Key
+   * @return    void        Sets error messages if any.
+   *
+   * @access    public
+   * @since     1.0
    */
   public function __construct( $user_name = '', $api_key = '' ) {
-    if ( $user_name == '' )
+  
+    if ( $user_name == '' ) {
       $this->set_error( 'user_name', __( 'Please enter your Envato Marketplace Username.', 'envato' ) );
+    }
       
-    if ( $api_key == '' )
+    if ( $api_key == '' ) {
       $this->set_error( 'api_key', __( 'Please enter your Envato Marketplace API Key.', 'envato' ) );
+    }
       
     $this->user_name  = $user_name;
     $this->api_key    = $api_key;
+    
   }
   
   /**
-   * Get private user data
+   * Get private user data.
    *
-   * @since   1.0
-   * @access  public
+   * @param     string      Available sets: 'vitals', 'earnings-and-sales-by-month', 'statement', 'recent-sales', 'account', 'verify-purchase', 'download-purchase', 'wp-list-themes', 'wp-download'
+   * @param     string      The buyer/author username to test against.
+   * @param     string      Additional set data such as purchase code or item id.
+   * @param     bool        Allow API calls to be cached. Default false.
+   * @param     int         Set transient timeout. Default 300 seconds (5 minutes).
+   * @return    array       An array of values (possibly cached) from the requested set, or an error message.
    *
-   * @param   string        Available sets: 'vitals', 'earnings-and-sales-by-month', 'statement', 'recent-sales', 'account', 'verify-purchase', 'download-purchase', 'wp-list-themes', 'wp-download'
-   * @param   string        The buyer/author username to test against.
-   * @param   string        Additional set data such as purchase code or item id.
-   * @return  array         An array of values from the requested set, or an error message.
+   * @access    public
+   * @since     1.0
+   * @updated   1.3
    */ 
-  public function private_user_data( $set = '', $user_name = '', $set_data = '' ) { 
-    if ( $set == '' )
+  public function private_user_data( $set = '', $user_name = '', $set_data = '', $allow_cache = false, $timeout = 300 ) { 
+    
+    if ( $set == '' ) {
       $this->set_error( 'set', __( 'The API "set" is a required parameter.', 'envato' ) );
+    }
       
-    if ( $user_name == '' )
+    if ( $user_name == '' ) {
       $user_name = $this->user_name;
+    }
       
-    if ( $set_data !== '' ) 
+    if ( $set_data !== '' ) {
       $set_data = ":$set_data";
+    }
       
     $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
-
-    $result = $this->curl( $url );
     
-    if ( isset( $result->error ) ) 
-      $this->set_error( 'result', $result->error );
+    /* set transient ID for later */
+    $transient = $user_name . '_' . $set . $set_data;
     
-    if ( $errors = $this->api_errors() )
+    if ( $allow_cache ) {
+      $cache_results = $this->set_cache( $transient, $url, $timeout );
+      $results = $cache_results;
+    } else {
+      $results = $this->curl( $url );
+    }
+    
+    if ( isset( $results->error ) ) {
+      $this->set_error( 'error_' . $set, $results->error );
+    }
+    
+    if ( $errors = $this->api_errors() ) {
+      $this->clear_cache( $transient );
       return $errors;
-    else
-      return $result->$set;
+    }
+    
+    if ( isset( $results->$set ) ) {
+      return $results->$set;
+    }
+    
+    return false;
+    
   }
   
   /**
    * Used to list purchased themes.
    *
-   * @since   1.0
-   * @access  public
+   * @param     bool        Allow API calls to be cached. Default true.
+   * @param     int         Set transient timeout. Default 300 seconds (5 minutes).
+   * @return    object      If user has purchased themes, returns an object containing those details.
    *
-   * @return  object        If purchased themes, returns an object containing those details.
-   */ 
-  public function wp_list_themes() {
-    return $this->private_user_data( 'wp-list-themes', $this->user_name );
+   * @access    public
+   * @since     1.0
+   * @updated   1.3
+   */
+  public function wp_list_themes( $allow_cache = true, $timeout = 300 ) {
+  
+    return $this->private_user_data( 'wp-list-themes', $this->user_name, '', $allow_cache, $timeout );
+    
   }
   
   /**
    * Used to download a purchased item.
    *
-   * @since   1.0
-   * @access  public
+   * This method does not allow caching.
    *
-   * @param   string        The purchased items id
-   * @return  string|bool   If item purchased, returns the download URL.
+   * @param     string      The purchased items id
+   * @return    string|bool If item purchased, returns the download URL.
+   *
+   * @access    public
+   * @since     1.0
    */ 
   public function wp_download( $item_id ) {
-    if ( ! isset( $item_id ) )
+    
+    if ( ! isset( $item_id ) ) {
       $this->set_error( 'item_id', __( 'The Envato Marketplace "item ID" is a required parameter.', 'envato' ) );
+    }
       
     $download = $this->private_user_data( 'wp-download', $this->user_name, $item_id );
     
-    if ( $errors = $this->api_errors() )
+    if ( $errors = $this->api_errors() ) {
       return $errors;
-    else
-      return isset( $download->url ) ? $download->url : false;
+    } else if ( isset( $download->url ) ) {
+      return $download->url;
+    }
+    
+    return false;
   }
   
   /**
    * Retrieve the details for a specific marketplace item.
    *
-   * @since   1.0
-   * @access  public
+   * @param     string      $item_id The id of the item you need information for. 
+   * @return    object      Details for the given item.
    *
-   * @param string $item_id The id of the item you need information for. 
-   * @return object Details for the given item.
+   * @access    public
+   * @since     1.0
+   * @updated   1.3
    */
-  public function item_details( $item_id ) {
+  public function item_details( $item_id, $allow_cache = true, $timeout = 300 ) {
+    
     $url = preg_replace( '/set/i', 'item:' . $item_id, $this->public_url );
-    return $this->curl( $url )->item;
-  }
-   
-  /**
-   * Helper function to set error messages.
-   *
-   * @since   1.0
-   * @access  private
-   *
-   * @param   string        The error array id.
-   * @param   string        The error message.
-   * @return  void
-   */
-  public function set_error( $id, $error ) {
-    $this->errors['errors'][$id] = $error;
+    
+    /* set transient ID for later */
+    $transient = 'item_' . $item_id;
+      
+    if ( $allow_cache ) {
+      $cache_results = $this->set_cache( $transient, $url, $timeout );
+      $results = $cache_results;
+    } else {
+      $results = $this->curl( $url );
+    }
+    
+    if ( isset( $results->error ) ) {
+      $this->set_error( 'error_item_' . $item_id, $results->error );
+    }
+    
+    if ( $errors = $this->api_errors() ) {
+      $this->clear_cache( $transient );
+      return $errors;
+    }
+      
+    if ( isset( $results->item ) ) {
+      return $results->item;
+    }
+    
+    return false;
+    
   }
   
   /**
-   * Helper function to return errors.
+   * Set cache with the Transients API.
    *
-   * @since   1.0
-   * @access  private
+   * @link      http://codex.wordpress.org/Transients_API
    *
-   * @return  array         The errors array.
+   * @param     string      Transient ID.
+   * @param     string      The URL of the API request.
+   * @param     int         Set transient timeout. Default 300 seconds (5 minutes).
+   * @return    mixed
+   *
+   * @access    public
+   * @since     1.3
+   */ 
+  public function set_cache( $transient = '', $url = '', $timeout = 300 ) {
+  
+    if ( $transient == '' || $url == '' ) {
+      return false;
+    }
+    
+    /* keep the code below cleaner */
+    $transient = $this->validate_transient( $transient );
+    $transient_timeout = '_transient_timeout_' . $transient;
+    
+    /* set original cache before we destroy it */
+    $old_cache = get_option( $transient_timeout ) < time() ? get_option( $transient ) : '';
+    
+    /* look for a cached result and return if exists */
+    if ( false !== $results = get_transient( $transient ) ) {
+      return $results;
+    }
+    
+    /* create the cache and allow filtering before it's saved */
+    if ( $results = apply_filters( 'envato_api_set_cache', $this->curl( $url ), $transient ) ) {
+      set_transient( $transient, $results, $timeout );
+      return $results;
+    }
+    
+    return false;
+    
+  }
+  
+  /**
+   * Clear cache with the Transients API.
+   *
+   * @link      http://codex.wordpress.org/Transients_API
+   *
+   * @param     string      Transient ID.
+   * @return    void
+   *
+   * @access    public
+   * @since     1.3
+   */ 
+  public function clear_cache( $transient = '' ) {
+  
+    delete_transient( $transient );
+    
+  }
+  
+  /**
+   * Helper function to validate transient ID's.
+   *
+   * @param     string      The transient ID.
+   * @return    string      Returns a DB safe transient ID.
+   *
+   * @access    public
+   * @since     1.3
+   */
+  public function validate_transient( $id = '' ) {
+
+    return preg_replace( '/[^A-Za-z0-9\_\-]/i', '', str_replace( ':', '_', $id ) );
+    
+  }
+  
+  /**
+   * Helper function to set error messages.
+   *
+   * @param     string      The error array id.
+   * @param     string      The error message.
+   * @return    void
+   *
+   * @access    public
+   * @since     1.0
+   */
+  public function set_error( $id, $error ) {
+  
+    $this->errors['errors'][$id] = $error;
+    
+  }
+  
+  /**
+   * Helper function to return the set errors.
+   *
+   * @return    array       The errors array.
+   *
+   * @access    public
+   * @since     1.0
    */
   public function api_errors() {
-    if ( ! empty( $this->errors['errors'] ) )
+  
+    if ( ! empty( $this->errors['errors'] ) ) {
       return $this->errors['errors'];
+    }
+    
   }
   
   /**
    * Helper function to query the marketplace API via CURL.
    *
-   * @since   1.0
-   * @access  private
+   * @param     string      The url to access.
+   * @return    object      The results of the curl request.
    *
-   * @param   string        The url to access.
-   * @return  object        The results of the curl request.
+   * @access    private
+   * @since     1.0
    */
   protected function curl( $url ) {
-    if ( empty( $url ) ) 
+  
+    if ( empty( $url ) ) {
       return false;
+    }
 
     $ch = curl_init( $url );
     curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -199,28 +348,34 @@ class Envato_Protected_API {
     
     $data = json_decode( $data );
     
-    if ( $info['http_code'] == 200 ) 
+    if ( $info['http_code'] == 200 ) {
       return $data;
-    else
+    } else {
       $this->set_error( 'http_code', $info['http_code'] );
+    }
       
-    if ( isset( $data->error ) )
+    if ( isset( $data->error ) ) {
       $this->set_error( 'api_error', $data->error ); 
+    }
+    
+    return false;
   }
   
   /**
-   * Helper function to print arrays to the screen
+   * Helper function to print arrays to the screen ofr testing.
    *
-   * @since   1.0
-   * @access  public
+   * @param     array       The array to print out
+   * @return    string
    *
-   * @param   array         The array to print out
-   * @return  string
+   * @access    public
+   * @since     1.0
    */
   public function pretty_print( $array ) {
+  
     echo '<pre>';
     print_r( $array );
     echo '</pre>';
+    
   }
 }
 
