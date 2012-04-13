@@ -202,7 +202,7 @@ class Envato_WP_Toolkit {
       echo '<div class="wrap">';
         echo '<div id="icon-themes" class="icon32"></div><h2>' . EWPT_PLUGIN_NAME . '</h2>';
         echo '
-        <form name="verification_form" method="post" action="options.php" id="api-verification">';
+        <form name="verification_form" method="post" action="' . network_admin_url( 'options.php' ) . '" id="api-verification">';
           wp_nonce_field( 'update-options' );
           settings_fields( EWPT_PLUGIN_SLUG );
           do_settings_sections( EWPT_PLUGIN_SLUG );
@@ -263,12 +263,12 @@ class Envato_WP_Toolkit {
             
             $has_update = ( $installed && version_compare( $version, $latest_version, '<' ) ) ? TRUE : FALSE;
             $details_url = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
-            $activate_url = wp_nonce_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ), 'switch-theme_' . $template );
+            $activate_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ) ), 'switch-theme_' . $template );
             $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
-            $delete_url = wp_nonce_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet, 'delete-theme_' . $stylesheet );
+            $delete_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet ), 'delete-theme_' . $stylesheet );
             $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato' ), $title ) ) . '\') ) {return true;}return false;"';
-            $install_url = wp_nonce_url( self_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
-            $update_url = wp_nonce_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id, 'upgrade-theme_' . $stylesheet );
+            $install_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
+            $update_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id ), 'upgrade-theme_' . $stylesheet );
             $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato' ) ) . '\') ) {return true;}return false;"';
             
             /* Theme Title message */
@@ -508,7 +508,7 @@ class Envato_WP_Toolkit {
       $action = $_GET['action'];
       if ( $page == EWPT_PLUGIN_SLUG ) {
         if ( 'install-theme' == $action || 'upgrade-theme' == $action ) {
-          $actions['themes_page'] = '<a href="' . self_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) . '</a>';
+          $actions['themes_page'] = '<a href="' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) . '</a>';
         }
       }
     }
@@ -547,7 +547,7 @@ class Envato_WP_Toolkit {
     
     $title = sprintf( __( 'Installing Theme: %s', 'envato' ), $api->name . ' ' . $api->version );
     $nonce = 'install-theme_' . $theme;
-    $url = 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $theme;
+    $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $theme );
     $type = 'web';
     
     /* trick WP into thinking it's the themes page for the icon32 */
@@ -580,7 +580,7 @@ class Envato_WP_Toolkit {
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
       
     switch_theme( $template, $stylesheet );
-    wp_redirect( admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&activated=true' ) );
+    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&activated=true' ) );
     exit;
   }
   
@@ -605,7 +605,7 @@ class Envato_WP_Toolkit {
     
     $title = __( 'Update Theme', 'envato' );
     $nonce = 'upgrade-theme_' . $theme;
-    $url = 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&theme=' . $theme . '&item_id=' . $item_id;
+    $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&theme=' . $theme . '&item_id=' . $item_id );
     
     /* trick WP into thinking it's the themes page for the icon32 */
     $current_screen->parent_base = 'themes';
@@ -638,8 +638,8 @@ class Envato_WP_Toolkit {
     if ( ! function_exists( 'delete_theme' ) )
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
     
-    delete_theme( $template, wp_nonce_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $template, 'delete-theme_' . $template ) );
-    wp_redirect( admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&deleted=true' ) );
+    delete_theme( $template, wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $template ), 'delete-theme_' . $template ) );
+    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&deleted=true' ) );
     exit;
   }
   

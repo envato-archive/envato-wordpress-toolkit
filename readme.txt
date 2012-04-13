@@ -3,7 +3,7 @@ Contributors: valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.2
+Stable tag: 1.3
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
 
@@ -34,6 +34,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 = 1.3 =
 * Added caching to the Envato Marketplace API requests.
+* Added support for Multisite.
 
 = 1.2 =
 * Updated register_setting group ID bug.
