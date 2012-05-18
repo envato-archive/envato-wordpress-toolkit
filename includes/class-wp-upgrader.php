@@ -20,6 +20,11 @@ if ( class_exists( 'Theme_Upgrader' ) ) {
     function upgrade_strings() {
       parent::upgrade_strings();
       $this->strings['downloading_package'] = __( 'Downloading upgrade package from the Envato API&#8230;', 'envato' );
+      
+      $options = get_option( EWPT_PLUGIN_SLUG );
+      if ( ! isset( $options['skip_theme_backup'] ) ) {
+        $this->strings['remove_old'] = __( 'Backing up & removing the old version of the theme&#8230;', 'envato' );
+      }        
     }
   
     function install_strings() {
