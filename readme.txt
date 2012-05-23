@@ -1,5 +1,5 @@
 === Envato WordPress Toolkit ===
-Contributors: valendesigns
+Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.2
