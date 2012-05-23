@@ -352,6 +352,9 @@ class Envato_WP_Toolkit {
                   }
                 }
               }
+              if ( ! empty( $theme_backup_uri ) ) {
+                $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato' ) ) . '</a>';
+              }
               if ( ! empty( $options ) )
                 $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
             }
