@@ -113,7 +113,7 @@ class Envato_Protected_API {
       $cache_results = $this->set_cache( $transient, $url, $timeout );
       $results = $cache_results;
     } else {
-      $results = $this->curl( $url );
+      $results = $this->remote_request( $url );
     }
     
     if ( isset( $results->error ) ) {
@@ -199,7 +199,7 @@ class Envato_Protected_API {
       $cache_results = $this->set_cache( $transient, $url, $timeout );
       $results = $cache_results;
     } else {
-      $results = $this->curl( $url );
+      $results = $this->remote_request( $url );
     }
     
     if ( isset( $results->error ) ) {
@@ -251,7 +251,7 @@ class Envato_Protected_API {
     }
     
     /* create the cache and allow filtering before it's saved */
-    if ( $results = apply_filters( 'envato_api_set_cache', $this->curl( $url ), $transient ) ) {
+    if ( $results = apply_filters( 'envato_api_set_cache', $this->remote_request( $url ), $transient ) ) {
       set_transient( $transient, $results, $timeout );
       return $results;
     }
@@ -325,33 +325,28 @@ class Envato_Protected_API {
   }
   
   /**
-   * Helper function to query the marketplace API via CURL.
+   * Helper function to query the marketplace API via wp_remote_request.
    *
    * @param     string      The url to access.
-   * @return    object      The results of the curl request.
+   * @return    object      The results of the wp_remote_request request.
    *
    * @access    private
    * @since     1.0
    */
-  protected function curl( $url ) {
+  protected function remote_request( $url ) {
   
     if ( empty( $url ) ) {
       return false;
     }
 
-    $ch = curl_init( $url );
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+    $request = wp_remote_request( $url );
 
-    $data = curl_exec( $ch );
-    $info = curl_getinfo( $ch );
-    curl_close( $ch );
+    $data = json_decode( $request['body'] );
     
-    $data = json_decode( $data );
-    
-    if ( $info['http_code'] == 200 ) {
+    if ( $request['response']['code'] == 200 ) {
       return $data;
     } else {
-      $this->set_error( 'http_code', $info['http_code'] );
+      $this->set_error( 'http_code', $request['response']['code'] );
     }
       
     if ( isset( $data->error ) ) {

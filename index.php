@@ -863,7 +863,7 @@ class Envato_WP_Toolkit {
    */
   public function _http_request_args( $r ){
     if ( (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
-      ini_set( 'max_execution_time', EWPT_PLUGIN_MAX_EXECUTION_TIME );
+      set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME );
     }
 
     $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
