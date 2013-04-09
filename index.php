@@ -246,7 +246,10 @@ class Envato_WP_Toolkit {
         if ( empty( $errors ) && count( $themes ) > 0 ) {
         
           /* get WP installed themes */
-          $get_themes = get_themes();
+          if ( function_exists( 'wp_get_themes' ) )
+            $get_themes = wp_get_themes();
+          else
+            $get_themes = get_themes();
         
           /* loop through the marketplace themes */
           $premium_themes = array();
