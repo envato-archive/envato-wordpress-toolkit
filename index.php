@@ -106,8 +106,8 @@ class Envato_WP_Toolkit {
     /* load required files */
     foreach ( array( 'class-wp-upgrader', 'class-envato-backup' ) as $file )
       require_once( EWPT_PLUGIN_DIR . 'includes/' . $file . '.php' );
-    if ( !class_exists( 'Envato_Protected_API' ) ) {
-        require_once( EWPT_PLUGIN_DIR . 'includes/' . 'class-envato-api' . '.php' );
+    if ( ! class_exists( 'Envato_Protected_API' ) ) {
+      require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
   }
   
