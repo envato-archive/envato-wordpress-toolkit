@@ -104,8 +104,11 @@ class Envato_WP_Toolkit {
    */
   protected function _includes() {
     /* load required files */
-    foreach ( array( 'class-envato-api', 'class-wp-upgrader', 'class-envato-backup' ) as $file )
+    foreach ( array( 'class-wp-upgrader', 'class-envato-backup' ) as $file )
       require_once( EWPT_PLUGIN_DIR . 'includes/' . $file . '.php' );
+    if ( !class_exists( 'Envato_Protected_API' ) ) {
+        require_once( EWPT_PLUGIN_DIR . 'includes/' . 'class-envato-api' . '.php' );
+    }
   }
   
   /**
