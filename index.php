@@ -201,7 +201,7 @@ class Envato_WP_Toolkit {
     $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
     $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
     
-    $this->protected_api =& new Envato_Protected_API( $user_name, $api_key );
+    $this->protected_api = new Envato_Protected_API( $user_name, $api_key );
     
     /* get purchased marketplace themes */
     $themes = $this->protected_api->wp_list_themes();
