@@ -447,10 +447,6 @@ class Envato_Backup {
         if ( $excludes && preg_match( '(' . $excludes . ')', $pathname ) )
           continue;
     
-        /* Don't include database dump as it's added separately */
-        if ( basename( $pathname ) == $this->database_dump_filename() )
-          continue;
-    
         $this->files[] = $pathname;
     
       }
