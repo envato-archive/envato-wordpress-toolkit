@@ -109,6 +109,7 @@ class Envato_WP_Toolkit {
     if ( ! class_exists( 'Envato_Protected_API' ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
+    require_once( EWPT_PLUGIN_DIR . 'includes/updater.php' );
   }
   
   /**
@@ -446,6 +447,44 @@ class Envato_WP_Toolkit {
       echo '</div>';   
     }
   }
+
+  /**
+   * Checks for updates to the plugin
+   *
+   * @access    private
+   * @since     1.6
+   *
+   * @return    void
+   */
+  protected function _admin_update_check() {
+
+    if ( class_exists( 'WP_GitHub_Updater' ) ) {
+
+      define( 'WP_GITHUB_FORCE_UPDATE', true );
+
+      if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
+
+        $config = array(
+          'slug' => plugin_basename( __FILE__ ),
+          'proper_folder_name' => EWPT_PLUGIN_SLUG,
+          'api_url' => 'https://api.github.com/repos/envato/' . EWPT_PLUGIN_SLUG,
+          'raw_url' => 'https://raw.github.com/envato/' . EWPT_PLUGIN_SLUG . '/master',
+          'github_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG,
+          'zip_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG . '/archive/master.zip',
+          'sslverify' => true,
+          'requires' => '3.0',
+          'tested' => '3.3.2',
+          'readme' => 'readme.txt',
+          'access_token' => '',
+        );
+
+        new WP_GitHub_Updater( $config );
+
+      }
+
+    }
+
+  }
   
   /**
    * Runs code before the headers are sent
@@ -497,6 +536,7 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _admin_init() {
+    $this->_admin_update_check();
     $this->_admin_init_before();
     register_setting( EWPT_PLUGIN_SLUG, EWPT_PLUGIN_SLUG );
     add_settings_section( 'user_account_info', __( 'User Account Information', 'envato' ), array( &$this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
