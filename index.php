@@ -853,7 +853,8 @@ class Envato_WP_Toolkit {
     if ( $handle = @opendir( $backup_path ) ) {
       $files = array();
       while ( false !== ( $file = readdir( $handle ) ) ) {
-        if ( reset( explode( '.', $file ) ) == $theme && end( explode( '.', $file ) ) == 'zip' ) {
+        $exploded_file = explode( '.', $file );
+        if ( reset( $exploded_file ) == $theme && end( $exploded_file ) == 'zip' ) {
           $files[@filemtime( trailingslashit( $backup_path ) . $file )] = trailingslashit( $backup_path ) . $file;
         }
       }
