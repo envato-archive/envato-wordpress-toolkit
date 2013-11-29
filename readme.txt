@@ -35,6 +35,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 = 1.6 =
 * Fixed: Bug that prevented updating if backups were enabled.
 * Added auto-updating.
+* Various bug fixes.
 
 = 1.5 =
 * Changed use of cURL to the WordPress HTTP API
