@@ -32,7 +32,7 @@ if ( class_exists( 'Theme_Upgrader' ) ) {
       $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;', 'envato' );
     }
     
-    function upgrade( $theme, $package ) {
+    function upgrade( $theme, $package = array() ) {
   
       $this->init();
       $this->upgrade_strings();
