@@ -460,8 +460,6 @@ class Envato_WP_Toolkit {
 
     if ( class_exists( 'WP_GitHub_Updater' ) ) {
 
-      define( 'WP_GITHUB_FORCE_UPDATE', true );
-
       if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
 
         $config = array(
