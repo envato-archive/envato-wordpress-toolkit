@@ -41,7 +41,7 @@ class Envato_WP_Toolkit {
    *
    * @access    private
    * @since     1.0
-   * @updated   1.4
+   * @updated   1.6
    *
    * @return    void
    */
@@ -49,7 +49,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.4' );
+    define( 'EWPT_PLUGIN_VER', '1.6' );
     
     /**
      * Plugin Name
