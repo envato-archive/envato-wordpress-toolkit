@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
- * Version: 1.6
+ * Version: 1.6.1
  * Author: Envato
  * Author URI: http://envato.com
  */
@@ -41,7 +41,7 @@ class Envato_WP_Toolkit {
    *
    * @access    private
    * @since     1.0
-   * @updated   1.4
+   * @updated   1.6
    *
    * @return    void
    */
@@ -49,7 +49,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.4' );
+    define( 'EWPT_PLUGIN_VER', '1.6.1' );
     
     /**
      * Plugin Name
@@ -136,13 +136,16 @@ class Envato_WP_Toolkit {
      * loaded during admin init 
      */
     add_action( 'admin_init', array( &$this, '_admin_init' ) );
-    
+
     /**
      * change link URL & text after install & upgrade 
      */
     add_filter( 'install_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'update_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'http_request_args', array( &$this , '_http_request_args' ), 10, 1 );
+
+    add_action( 'wp_ajax_hide_admin_notification', array( &$this, '_hide_admin_notification' ) );
+
   }
   
   /**
@@ -170,6 +173,7 @@ class Envato_WP_Toolkit {
    */
   public function _envato_load_scripts() {
     wp_enqueue_script( 'theme-preview' );
+    wp_enqueue_script( 'ajax-notification', EWPT_PLUGIN_URL . 'assets/js/ajax-notification.js', false, EWPT_PLUGIN_VER );
   }
   
   /**
@@ -201,6 +205,15 @@ class Envato_WP_Toolkit {
     
     /* read in existing API value from database */
     $options = get_option( EWPT_PLUGIN_SLUG );
+
+    /* display environment errors */
+    if ( ! empty( $options['env_errors'] ) ) {
+      foreach ( $options['env_errors'] as $k => $v ) {
+        if ( empty( $options['dismissed_errors'][$k] ) ) {
+          echo '<div class="error">' . $v . '</div>';
+        }
+      }
+    }
 
     $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
     $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
@@ -497,6 +510,7 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   protected function _admin_init_before() {
+
     if ( isset( $_GET['page'] ) ) {
       $page = $_GET['page'];
       
@@ -912,13 +926,64 @@ class Envato_WP_Toolkit {
    */
   public function _http_request_args( $r ){
     if ( (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
-      set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME );
+      try {
+        $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
+      } catch ( Exception $e ) {
+        $options = get_option( EWPT_PLUGIN_SLUG );
+        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification" href="javascript:;">Dismiss this.</a>', $e->getMessage() );
+        $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . wp_create_nonce( 'ajax-notification-nonce' ) . '</span></p>';
+        $options['env_errors']['max_execution_time'] = $env_error;
+        update_option( EWPT_PLUGIN_SLUG, $options );
+      }
     }
 
     $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
     return $r;
   }
-  
+
+  /**
+   * Attempt to force increase to max_execution_time, throw exception with user-friendly message otherwise
+   *
+   * @author    Japheth Thomson
+   *
+   * @access    private
+   * @since     1.6.1
+   */
+  public function _set_max_execution_time() {
+    if ( ! @set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME ) ) {
+      throw new Exception( 'Unable to increase maximum execution time. Due to settings on your server, large themes may be unable to update automatically. Please consult your server administrator if this causes issues for you.' );
+    }
+  }
+
+  /**
+   * Ajax method for hiding dismissable admin notices.
+   * Forked from original code by Tom McFarlin.
+   *
+   * @author    Japheth Thomson
+   *
+   * @access    private
+   * @since     1.6.1
+   */
+  public function _hide_admin_notification() {
+
+    if( wp_verify_nonce( $_REQUEST['nonce'], 'ajax-notification-nonce' ) && ! empty( $_REQUEST['notice_id'] ) ) {
+
+      $options = get_option( EWPT_PLUGIN_SLUG );
+
+      // If the update to the option is successful, send 1 back to the browser;
+      // Otherwise, send 0.
+      $options['dismissed_errors'][$_REQUEST['notice_id']] = 1;
+
+      if ( update_option( EWPT_PLUGIN_SLUG, $options ) ) {
+        die( '1' );
+      } else {
+        die( '0' );
+      } // end if/else
+      
+    } // end if
+
+  }
+
 }
 
 /**
