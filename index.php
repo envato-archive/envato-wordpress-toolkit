@@ -935,10 +935,10 @@ class Envato_WP_Toolkit {
   /**
    * Attempt to force increase to max_execution_time, throw exception with user-friendly message otherwise
    *
-   * @author    Japh
+   * @author    Japheth Thomson
    *
    * @access    private
-   * @since     1.7
+   * @since     1.6.1
    */
   public function _set_max_execution_time() {
     if ( ! @set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME ) ) {

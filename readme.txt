@@ -32,7 +32,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
-= 1.7 =
+= 1.6.1 =
 * set_time_limit errors are now hidden in favour of a more user-friendly message.
 
 = 1.6 =
