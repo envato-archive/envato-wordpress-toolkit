@@ -3,7 +3,7 @@ Contributors: envato, valendesigns, japh
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.2
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
