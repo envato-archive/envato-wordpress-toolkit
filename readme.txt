@@ -34,6 +34,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 = 1.6.1 =
 * set_time_limit errors are now hidden in favour of a more user-friendly message.
+* Make error notices dismissable.
 
 = 1.6 =
 * Fixed: Bug that prevented updating if backups were enabled.

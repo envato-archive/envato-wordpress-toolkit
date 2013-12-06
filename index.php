@@ -136,13 +136,16 @@ class Envato_WP_Toolkit {
      * loaded during admin init 
      */
     add_action( 'admin_init', array( &$this, '_admin_init' ) );
-    
+
     /**
      * change link URL & text after install & upgrade 
      */
     add_filter( 'install_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'update_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
     add_filter( 'http_request_args', array( &$this , '_http_request_args' ), 10, 1 );
+
+    add_action( 'wp_ajax_hide_admin_notification', array( &$this, '_hide_admin_notification' ) );
+
   }
   
   /**
@@ -170,6 +173,7 @@ class Envato_WP_Toolkit {
    */
   public function _envato_load_scripts() {
     wp_enqueue_script( 'theme-preview' );
+    wp_enqueue_script( 'ajax-notification', EWPT_PLUGIN_URL . 'assets/js/ajax-notification.js', false, EWPT_PLUGIN_VER );
   }
   
   /**
@@ -205,7 +209,9 @@ class Envato_WP_Toolkit {
     /* display environment errors */
     if ( ! empty( $options['env_errors'] ) ) {
       foreach ( $options['env_errors'] as $k => $v ) {
-        echo '<div class="error"><p>' . $v . '</p></div>';
+        if ( empty( $options['dismissed_errors'][$k] ) ) {
+          echo '<div class="error">' . $v . '</div>';
+        }
       }
     }
 
@@ -504,6 +510,7 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   protected function _admin_init_before() {
+
     if ( isset( $_GET['page'] ) ) {
       $page = $_GET['page'];
       
@@ -923,7 +930,9 @@ class Envato_WP_Toolkit {
         $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
       } catch ( Exception $e ) {
         $options = get_option( EWPT_PLUGIN_SLUG );
-        $options['env_errors']['max_execution_time'] = sprintf( __( '<p><strong>Environment error:</strong> %s</p>', 'envato' ), $e->getMessage() );
+        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification" href="javascript:;">Dismiss this.</a>', $e->getMessage() );
+        $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . wp_create_nonce( 'ajax-notification-nonce' ) . '</span></p>';
+        $options['env_errors']['max_execution_time'] = $env_error;
         update_option( EWPT_PLUGIN_SLUG, $options );
       }
     }
@@ -945,7 +954,29 @@ class Envato_WP_Toolkit {
       throw new Exception( 'Unable to increase maximum execution time. Due to settings on your server, large themes may be unable to update automatically. Please consult your server administrator if this causes issues for you.' );
     }
   }
-  
+
+  /**
+   */
+  public function _hide_admin_notification() {
+
+    if( wp_verify_nonce( $_REQUEST['nonce'], 'ajax-notification-nonce' ) && ! empty( $_REQUEST['notice_id'] ) ) {
+
+      $options = get_option( EWPT_PLUGIN_SLUG );
+
+      // If the update to the option is successful, send 1 back to the browser;
+      // Otherwise, send 0.
+      $options['dismissed_errors'][$_REQUEST['notice_id']] = 1;
+
+      if ( update_option( EWPT_PLUGIN_SLUG, $options ) ) {
+        die( '1' );
+      } else {
+        die( '0' );
+      } // end if/else
+      
+    } // end if
+
+  }
+
 }
 
 /**
