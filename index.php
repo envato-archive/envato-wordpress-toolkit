@@ -202,6 +202,13 @@ class Envato_WP_Toolkit {
     /* read in existing API value from database */
     $options = get_option( EWPT_PLUGIN_SLUG );
 
+    /* display environment errors */
+    if ( ! empty( $options['env_errors'] ) ) {
+      foreach ( $options['env_errors'] as $k => $v ) {
+        echo '<div class="error"><p>' . $v . '</p></div>';
+      }
+    }
+
     $user_name = ( isset( $options['user_name'] ) ) ? $options['user_name'] : '';
     $api_key = ( isset( $options['api_key'] ) ) ? $options['api_key'] : '';
     
@@ -912,11 +919,31 @@ class Envato_WP_Toolkit {
    */
   public function _http_request_args( $r ){
     if ( (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
-      set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME );
+      try {
+        $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
+      } catch ( Exception $e ) {
+        $options = get_option( EWPT_PLUGIN_SLUG );
+        $options['env_errors']['max_execution_time'] = sprintf( __( '<p><strong>Environment error:</strong> %s</p>', 'envato' ), $e->getMessage() );
+        update_option( EWPT_PLUGIN_SLUG, $options );
+      }
     }
 
     $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
     return $r;
+  }
+
+  /**
+   * Attempt to force increase to max_execution_time, throw exception with user-friendly message otherwise
+   *
+   * @author    Japh
+   *
+   * @access    private
+   * @since     1.7
+   */
+  public function _set_max_execution_time() {
+    if ( ! @set_time_limit( EWPT_PLUGIN_MAX_EXECUTION_TIME ) ) {
+      throw new Exception( 'Unable to increase maximum execution time. Due to settings on your server, large themes may be unable to update automatically. Please consult your server administrator if this causes issues for you.' );
+    }
   }
   
 }
