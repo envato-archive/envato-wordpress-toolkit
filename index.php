@@ -623,7 +623,7 @@ class Envato_WP_Toolkit {
   public function _field_skip_theme_backup() {
     $options = get_option( EWPT_PLUGIN_SLUG );
     $field_value = isset( $options['skip_theme_backup'] ) ? true : false;
-    echo '<input type="checkbox" class="regular-text" name="' . EWPT_PLUGIN_SLUG . '[skip_theme_backup]" value="1" ' . checked( $field_value, 1, false ) . ' />';
+    echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[skip_theme_backup]" value="1" ' . checked( $field_value, 1, false ) . ' />';
   }
   
   /**
