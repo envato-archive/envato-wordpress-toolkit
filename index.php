@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
- * Version: 1.6.1
+ * Version: 1.6.2
  * Author: Envato
  * Author URI: http://envato.com
  */
@@ -49,7 +49,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.6.1' );
+    define( 'EWPT_PLUGIN_VER', '1.6.2' );
     
     /**
      * Plugin Name
