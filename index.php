@@ -109,7 +109,9 @@ class Envato_WP_Toolkit {
     if ( ! class_exists( 'Envato_Protected_API' ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
-    require_once( EWPT_PLUGIN_DIR . 'includes/updater.php' );
+    if ( ! class_exists( 'WP_GitHub_Updater' ) ) {
+      require_once( EWPT_PLUGIN_DIR . 'includes/updater.php' );
+    }
   }
   
   /**
