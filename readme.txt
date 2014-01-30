@@ -3,7 +3,7 @@ Contributors: envato, valendesigns, japh
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.0
 Tested up to: 3.3.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -31,6 +31,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.6.2 =
+* Fixed: Conflict with other plugins using the GitHub updater.
 
 = 1.6.1 =
 * set_time_limit errors are now hidden in favour of a more user-friendly message.
