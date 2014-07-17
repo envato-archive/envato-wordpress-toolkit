@@ -302,19 +302,19 @@ class Envato_WP_Toolkit {
                 foreach( $get_themes as $k => $v ) {
                   if ( $get_themes[$k]['Title'] == $title && $get_themes[$k]['Author Name'] == $author && $template == '' ) {
                     $template = $get_themes[$k]['Template'];
-                  	$stylesheet = $get_themes[$k]['Stylesheet'];
-                  	$title = $get_themes[$k]['Title'];
-                  	$version = $get_themes[$k]['Version'];
-                  	$description = $get_themes[$k]['Description'];
-                  	$author = $get_themes[$k]['Author'];
-                  	$screenshot = $get_themes[$k]['Screenshot'];
-                  	$stylesheet_dir = $get_themes[$k]['Stylesheet Dir'];
-                  	$template_dir = $get_themes[$k]['Template Dir'];
-                  	$parent_theme = $get_themes[$k]['Parent Theme'];
-                  	$theme_root = $get_themes[$k]['Theme Root'];
-                  	$theme_root_uri = $get_themes[$k]['Theme Root URI'];
-                  	$tags = $get_themes[$k]['Tags'];
-                  	$installed = true;
+                    $stylesheet = $get_themes[$k]['Stylesheet'];
+                    $title = $get_themes[$k]['Title'];
+                    $version = $get_themes[$k]['Version'];
+                    $description = $get_themes[$k]['Description'];
+                    $author = $get_themes[$k]['Author'];
+                    $screenshot = $get_themes[$k]['Screenshot'];
+                    $stylesheet_dir = $get_themes[$k]['Stylesheet Dir'];
+                    $template_dir = $get_themes[$k]['Template Dir'];
+                    $parent_theme = $get_themes[$k]['Parent Theme'];
+                    $theme_root = $get_themes[$k]['Theme Root'];
+                    $theme_root_uri = $get_themes[$k]['Theme Root URI'];
+                    $tags = $get_themes[$k]['Tags'];
+                    $installed = true;
                     continue;
                   }
                 }
@@ -414,7 +414,7 @@ class Envato_WP_Toolkit {
                     $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
                   }
                 }
-            		
+                
                 /* put the HTML into a variable */
                 $list_item = '
                 <li>
@@ -847,7 +847,7 @@ class Envato_WP_Toolkit {
     /* Secure the directory with a .htaccess file */
     $htaccess = $path . '.htaccess';
     
-    $contents[]	= '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato' );
+    $contents[]  = '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato' );
     $contents[] = '';
     $contents[] = '<IfModule mod_rewrite.c>';
     $contents[] = 'RewriteEngine On';
