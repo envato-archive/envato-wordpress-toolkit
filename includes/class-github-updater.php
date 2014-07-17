@@ -1,11 +1,10 @@
 <?php
-
 // Prevent loading this file directly and/or if the class is already defined
 if ( ! defined( 'ABSPATH' ) || class_exists( 'WPGitHubUpdater' ) || class_exists( 'WP_GitHub_Updater' ) )
   return;
 
 /**
- *
+ * This is a derivitive work and has been modified.
  *
  * @version 1.6
  * @author Joachim Kudish <info@jkudish.com>
@@ -90,7 +89,7 @@ class WP_GitHub_Updater {
 
     // Hook into the plugin details screen
     add_filter( 'plugins_api', array( $this, 'get_plugin_info' ), 10, 3 );
-    add_filter( 'upgrader_post_install', array( $this, 'upgrader_post_install' ), 10, 3 );
+    add_filter( 'upgrader_source_selection', array( $this, 'upgrader_source_selection' ) );
 
     // set timeout
     add_filter( 'http_request_timeout', array( $this, 'http_request_timeout' ) );
@@ -409,32 +408,27 @@ class WP_GitHub_Updater {
     return $response;
   }
 
-
   /**
-   * Upgrader/Updater
-   * Move & activate the plugin, echo the update message
+   * Filter the source file location for the upgrade package.
    *
    * @since 1.0
-   * @param boolean $true       always true
-   * @param mixed   $hook_extra not used
-   * @param array   $result     the result of the move
-   * @return array $result the result of the move
+   * @param string      $source        File source location.
    */
-  public function upgrader_post_install( $true, $hook_extra, $result ) {
-
-    global $wp_filesystem;
-
-    // Move & Activate
-    $proper_destination = WP_PLUGIN_DIR.'/'.$this->config['proper_folder_name'];
-    $wp_filesystem->move( $result['destination'], $proper_destination );
-    $result['destination'] = $proper_destination;
-    $activate = activate_plugin( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
-
-    // Output the update message
-    $fail  = __( 'The plugin has been updated, but could not be reactivated. Please reactivate it manually.', 'github_plugin_updater' );
-    $success = __( 'Plugin reactivated successfully.', 'github_plugin_updater' );
-    echo is_wp_error( $activate ) ? $fail : $success;
-    return $result;
+  public function upgrader_source_selection( $source ) {
+    
+    // Fix the destination path
+    if ( strpos( $source, $this->config['proper_folder_name'] . '-master' ) !== false ) {
+      global $wp_filesystem;
+      $proper_source = str_replace( '-master', '', $source );
+      $wp_filesystem->move( $source, $proper_source );
+      $source = $proper_source;
+    }
+    
+    return $source;
 
   }
+
 }
+
+/* End of file class-github-updater.php */
+/* Location: ./includes/class-github-updater.php */

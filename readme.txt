@@ -36,6 +36,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 * Fixed: Converted transient names into hashes to comply with character limits.
 * Fixed: Invalid argument supplied foreach warning.
 * Fixed: Call to undefined function wp_create_nonce.
+* Fixed: Changed the WP_GitHub_Updater class so it will properly name the directory.
 
 = 1.6.3 =
 * Fixed: Conflict with the WP-Compatibility Installer plugin.

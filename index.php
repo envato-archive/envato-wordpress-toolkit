@@ -122,7 +122,7 @@ class Envato_WP_Toolkit {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
     if ( ! class_exists( 'WP_GitHub_Updater' ) ) {
-      require_once( EWPT_PLUGIN_DIR . 'includes/updater.php' );
+      require_once( EWPT_PLUGIN_DIR . 'includes/class-github-updater.php' );
     }
   }
   
