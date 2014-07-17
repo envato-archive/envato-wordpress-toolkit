@@ -1,9 +1,9 @@
 === Envato WordPress Toolkit ===
 Contributors: envato, valendesigns, japh
 Tags: install, update, api, envato, theme, upgrade
-Requires at least: 3.0
+Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.6.3
+Stable tag: 1.7.0
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -31,6 +31,13 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.7.0 =
+* Fixed: Converted transient names into hashes to comply with character limits.
+* Fixed: Invalid argument supplied foreach warning.
+* Fixed: Call to undefined function wp_create_nonce.
+* Fixed: Changed the WP_GitHub_Updater class so it will properly name the directory.
+* Fixed: Decompression error caused by gzinflate().
 
 = 1.6.3 =
 * Fixed: Conflict with the WP-Compatibility Installer plugin.
