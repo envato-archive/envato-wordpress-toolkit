@@ -141,9 +141,9 @@ class Envato_WP_Toolkit {
      * add envato menu item, change menu filter for multisite
      */
     if ( is_multisite() ) {
-      add_action( 'network_admin_menu', array( &$this, '_envato_menu' ) );
+      add_action( 'network_admin_menu', array( $this, '_envato_menu' ) );
     } else {
-      add_action( 'admin_menu', array( &$this, '_envato_menu' ) );
+      add_action( 'admin_menu', array( $this, '_envato_menu' ) );
     }
     
     /**
@@ -154,16 +154,16 @@ class Envato_WP_Toolkit {
     /**
      * loaded during admin init 
      */
-    add_action( 'admin_init', array( &$this, '_admin_init' ) );
+    add_action( 'admin_init', array( $this, '_admin_init' ) );
 
     /**
      * change link URL & text after install & upgrade 
      */
-    add_filter( 'install_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
-    add_filter( 'update_theme_complete_actions', array( &$this, '_complete_actions' ), 10, 1 );
-    add_filter( 'http_request_args', array( &$this , '_http_request_args' ), 10, 1 );
+    add_filter( 'install_theme_complete_actions', array( $this, '_complete_actions' ), 10, 1 );
+    add_filter( 'update_theme_complete_actions', array( $this, '_complete_actions' ), 10, 1 );
+    add_filter( 'http_request_args', array( $this , '_http_request_args' ), 10, 1 );
 
-    add_action( 'wp_ajax_hide_admin_notification', array( &$this, '_hide_admin_notification' ) );
+    add_action( 'wp_ajax_hide_admin_notification', array( $this, '_hide_admin_notification' ) );
 
   }
   
@@ -194,10 +194,10 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
-    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( &$this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 59 );
+    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 59 );
     
-    add_action('admin_print_scripts-' . $menu_page, array( &$this, '_envato_load_scripts' ) );
-    add_action('admin_print_styles-' . $menu_page, array( &$this, '_envato_load_styles' ) );
+    add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
+    add_action('admin_print_styles-' . $menu_page, array( $this, '_envato_load_styles' ) );
   }
   
   /**
@@ -596,11 +596,11 @@ class Envato_WP_Toolkit {
     $this->_admin_update_check();
     $this->_admin_init_before();
     register_setting( EWPT_PLUGIN_SLUG, EWPT_PLUGIN_SLUG );
-    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato' ), array( &$this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato' ), array( &$this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_field( 'api_key', __( 'Secret API Key', 'envato' ), array( &$this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_section( 'backup_info', __( 'Backup Information', 'envato' ), array( &$this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato' ), array( &$this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
+    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato' ), array( $this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato' ), array( $this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_field( 'api_key', __( 'Secret API Key', 'envato' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_section( 'backup_info', __( 'Backup Information', 'envato' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
   }
   
   /**
