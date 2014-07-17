@@ -489,8 +489,8 @@ class Envato_WP_Toolkit {
           'github_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG,
           'zip_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG . '/archive/master.zip',
           'sslverify' => true,
-          'requires' => '3.0',
-          'tested' => '3.3.2',
+          'requires' => '3.6',
+          'tested' => '3.9.1',
           'readme' => 'readme.txt',
           'access_token' => '',
         );
