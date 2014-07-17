@@ -107,7 +107,7 @@ class Envato_Protected_API {
     $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
     
     /* set transient ID for later */
-    $transient = $user_name . '_' . $set . $set_data;
+    $transient = substr( md5( $user_name . '_' . $set . $set_data ), 0, 16 );
     
     if ( $allow_cache ) {
       $cache_results = $this->set_cache( $transient, $url, $timeout );
@@ -193,7 +193,7 @@ class Envato_Protected_API {
     $url = preg_replace( '/set/i', 'item:' . $item_id, $this->public_url );
     
     /* set transient ID for later */
-    $transient = 'item_' . $item_id;
+    $transient = substr( md5( 'item_' . $item_id ), 0, 16 );
       
     if ( $allow_cache ) {
       $cache_results = $this->set_cache( $transient, $url, $timeout );
@@ -342,8 +342,8 @@ class Envato_Protected_API {
     $request = wp_remote_request( $url );
 
     if ( is_wp_error( $request ) ) {
-      echo $request->get_error_message();
-      return false;
+    	echo $request->get_error_message();
+    	return false;
     }
 
     $data = json_decode( $request['body'] );
