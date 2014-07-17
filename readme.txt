@@ -35,6 +35,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.
 * Fixed: Invalid argument supplied foreach warning.
+* Fixed: Call to undefined function wp_create_nonce.
 
 = 1.6.3 =
 * Fixed: Conflict with the WP-Compatibility Installer plugin.

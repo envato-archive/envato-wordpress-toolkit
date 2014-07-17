@@ -2,12 +2,13 @@
 /**
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
- * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports theme install & upgrade.
+ * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
  * Version: 1.7.0
  * Author: Envato
  * Author URI: http://envato.com
  */
 class Envato_WP_Toolkit {
+  
   /**
    * The Envato Protected API object
    *
@@ -17,6 +18,16 @@ class Envato_WP_Toolkit {
    * @var       object
    */
   protected $protected_api;
+  
+  /**
+   * Nonce for AJAX notifications
+   *
+   * @access    private
+   * @since     1.7.0
+   *
+   * @var       string
+   */
+  protected $ajax_notification_nonce;
   
   /**
    * PHP5 constructor method.
@@ -64,7 +75,7 @@ class Envato_WP_Toolkit {
     /**
      * Maximum request time
      */
-    define( 'EWPT_PLUGIN_MAX_EXECUTION_TIME' , 60 * 5);
+    define( 'EWPT_PLUGIN_MAX_EXECUTION_TIME' , 60 * 5 );
     
     /**
      * Plugin Directory Path
@@ -92,6 +103,7 @@ class Envato_WP_Toolkit {
      * @uses    NONCE_KEY     Defined in the WP root config.php
      */
     define( 'EWPT_SECURE_KEY', md5( NONCE_KEY ) );
+    
   }
   
   /**
@@ -135,6 +147,11 @@ class Envato_WP_Toolkit {
     }
     
     /**
+     * Create AJAX nonce
+     */
+    add_action( 'init', array( $this, '_ajax_notification_nonce' ) );
+    
+    /**
      * loaded during admin init 
      */
     add_action( 'admin_init', array( &$this, '_admin_init' ) );
@@ -148,6 +165,24 @@ class Envato_WP_Toolkit {
 
     add_action( 'wp_ajax_hide_admin_notification', array( &$this, '_hide_admin_notification' ) );
 
+  }
+  
+  /**
+   * Create a nonce for AJAX notifications
+   *
+   * @uses wp_create_nonce() Generates and returns a nonce.
+   *
+   * @access    private
+   * @since     1.7.0
+   *
+   * @return    void
+   */
+  public function _ajax_notification_nonce() {
+    
+    /* only if in the admin area */
+    if ( is_admin() )
+      $this->ajax_notification_nonce = wp_create_nonce( 'ajax-notification-nonce' );
+      
   }
   
   /**
@@ -937,7 +972,7 @@ class Envato_WP_Toolkit {
       } catch ( Exception $e ) {
         $options = get_option( EWPT_PLUGIN_SLUG );
         $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification" href="javascript:;">Dismiss this.</a>', $e->getMessage() );
-        $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . wp_create_nonce( 'ajax-notification-nonce' ) . '</span></p>';
+        $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . $this->ajax_notification_nonce . '</span></p>';
         $options['env_errors']['max_execution_time'] = $env_error;
         update_option( EWPT_PLUGIN_SLUG, $options );
       }
