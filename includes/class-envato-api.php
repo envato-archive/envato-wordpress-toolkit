@@ -340,10 +340,9 @@ class Envato_Protected_API {
     }
     
     $args = array(
-      'headers' => array(
-        'Accept-Encoding' => '', 
-        'sslverify'       => false
-      )
+      'headers'   => array( 'Accept-Encoding' => '' ), 
+      'sslverify' => false,
+      'timeout'   => 300
     );
     $request = wp_remote_request( $url, $args );
 
