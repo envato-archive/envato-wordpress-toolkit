@@ -338,8 +338,14 @@ class Envato_Protected_API {
     if ( empty( $url ) ) {
       return false;
     }
-
-    $request = wp_remote_request( $url );
+    
+    $args = array(
+      'headers' => array(
+        'Accept-Encoding' => '', 
+        'sslverify'       => false
+      )
+    );
+    $request = wp_remote_request( $url, $args );
 
     if ( is_wp_error( $request ) ) {
     	echo $request->get_error_message();
