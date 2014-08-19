@@ -82,7 +82,9 @@ class WP_GitHub_Updater {
       _doing_it_wrong( __CLASS__, $message , self::VERSION );
       return;
     }
-
+    
+    $this->config['transient_base'] = substr( md5( $this->config['slug'] ), 0, 16 );
+    
     $this->set_defaults();
 
     add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
@@ -149,7 +151,6 @@ class WP_GitHub_Updater {
       $this->config['zip_url'] = $zip_url;
     }
 
-
     if ( ! isset( $this->config['new_version'] ) )
       $this->config['new_version'] = $this->get_new_version();
 
@@ -174,7 +175,7 @@ class WP_GitHub_Updater {
 
     if ( ! isset( $this->config['readme'] ) )
       $this->config['readme'] = 'README.md';
-
+      
   }
 
 
@@ -211,7 +212,7 @@ class WP_GitHub_Updater {
    * @return int $version the version number
    */
   public function get_new_version() {
-    $version = get_site_transient( $this->config['slug'].'_new_version' );
+    $version = get_site_transient( $this->config['transient_base'].'_new_version' );
 
     if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
 
@@ -249,7 +250,7 @@ class WP_GitHub_Updater {
 
       // refresh every 6 hours
       if ( false !== $version )
-        set_site_transient( $this->config['slug'].'_new_version', $version, 60*60*6 );
+        set_site_transient( $this->config['transient_base'].'_new_version', $version, 60*60*6 );
     }
 
     return $version;
@@ -286,7 +287,7 @@ class WP_GitHub_Updater {
     if ( isset( $this->github_data ) && ! empty( $this->github_data ) ) {
       $github_data = $this->github_data;
     } else {
-      $github_data = get_site_transient( $this->config['slug'].'_github_data' );
+      $github_data = get_site_transient( $this->config['transient_base'].'_github_data' );
 
       if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
         $github_data = $this->remote_get( $this->config['api_url'] );
@@ -297,7 +298,7 @@ class WP_GitHub_Updater {
         $github_data = json_decode( $github_data['body'] );
 
         // refresh every 6 hours
-        set_site_transient( $this->config['slug'].'_github_data', $github_data, 60*60*6 );
+        set_site_transient( $this->config['transient_base'].'_github_data', $github_data, 60*60*6 );
       }
 
       // Store the data in this class instance for future calls
