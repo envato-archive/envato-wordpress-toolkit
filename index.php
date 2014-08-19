@@ -121,7 +121,8 @@ class Envato_WP_Toolkit {
     if ( ! class_exists( 'Envato_Protected_API' ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
-    if ( ! class_exists( 'WP_GitHub_Updater' ) ) {
+    $options = get_option( EWPT_PLUGIN_SLUG );
+    if ( ! class_exists( 'WP_GitHub_Updater' ) && ! isset( $options['deactivate_github_updater'] ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-github-updater.php' );
     }
   }
@@ -601,6 +602,8 @@ class Envato_WP_Toolkit {
     add_settings_field( 'api_key', __( 'Secret API Key', 'envato' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
     add_settings_section( 'backup_info', __( 'Backup Information', 'envato' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
     add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
+    add_settings_section( 'github_updater', __( 'Github Updater', 'envato' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
   }
   
   /**
@@ -665,6 +668,32 @@ class Envato_WP_Toolkit {
     $options = get_option( EWPT_PLUGIN_SLUG );
     $field_value = isset( $options['skip_theme_backup'] ) ? true : false;
     echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[skip_theme_backup]" value="1" ' . checked( $field_value, 1, false ) . ' />';
+  }
+  
+  /**
+   * Github Updater
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string
+   */
+  public function _section_github_updater() {
+    printf( __( 'The Envato WordPress Toolkit is not hosted in the WordPress.org plugin repository and needed a way to be updated like other plugins. So we added the ability for the plugin to update itself via our %s Github repository a while back. However, it\'s possible that the %s class is slowing down your admin page loads. This option will let you deactivate the updater so the class does not loads and admin speeds will go back to normal. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato' ), '<a href="https://github.com/envato/envato-wordpress-toolkit" target="_blank">' . __( 'Envato WordPress Toolkit', 'envato' ) . '</a>', '<code>WP_GitHub_Updater</code>' );
+  }
+  
+  /**
+   * Deactivate Github Updater
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string
+   */
+  public function _field_deactivate_github_updater() {
+    $options = get_option( EWPT_PLUGIN_SLUG );
+    $field_value = isset( $options['deactivate_github_updater'] ) ? true : false;
+    echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_github_updater]" value="1" ' . checked( $field_value, 1, false ) . ' />';
   }
   
   /**

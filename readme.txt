@@ -32,6 +32,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
+= 1.7.1 =
+* Added: Ability to deactivate the Github Updater.
+
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.
 * Fixed: Invalid argument supplied foreach warning.
