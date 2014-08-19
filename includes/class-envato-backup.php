@@ -132,7 +132,7 @@ class Envato_Backup {
     
     $this->errors = array();
     
-    set_error_handler( array( &$this, 'error_handler' ) );
+    set_error_handler( array( $this, 'error_handler' ) );
     
     /* Defaults */
     $this->root = $this->conform_dir( ABSPATH );
