@@ -148,6 +148,11 @@ class Envato_WP_Toolkit {
     }
     
     /**
+     * Menu Icon CSS
+     */
+    add_action( 'admin_head', array( $this, '_menu_icon' ) );
+    
+    /**
      * Create AJAX nonce
      */
     add_action( 'init', array( $this, '_ajax_notification_nonce' ) );
@@ -195,10 +200,67 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
-    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 58 );
+    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), null, 58 );
     
     add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
     add_action('admin_print_styles-' . $menu_page, array( $this, '_envato_load_styles' ) );
+  }
+  
+  /**
+   * Menu Font Icon CSS
+   *
+   * Changes the menu image icon to a font based version.
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string      Return icon CSS.
+   */
+  public function _menu_icon() {
+    global $wp_version;
+    
+    $wp_38plus = version_compare( $wp_version, '3.8', '>=' ) ? true : false;
+    $fontsize = $wp_38plus ? '20px' : '16px';
+    $wp_38minus = '';
+    
+    if ( ! $wp_38plus ) {
+      $wp_38minus = '
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image {
+        background: none;
+      }
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image:before {
+        padding-left: 6px;
+      }';
+    }
+  
+    echo '
+    <style>
+      @font-face {
+        font-family: "envato";
+        src:url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.eot?20141121");
+        src:url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.eot?#iefix20141121") format("embedded-opentype"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.woff?20141121") format("woff"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.ttf?20141121") format("truetype"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.svg?20141121#envato") format("svg");
+        font-weight: normal;
+        font-style: normal;
+      }
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image:before {
+        font: normal ' . $fontsize . '/1 "envato" !important;
+        content: "\e600";
+        speak: none;
+        padding: 6px 0;
+        height: 34px;
+        width: 20px;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-transition: all .1s ease-in-out;
+        -moz-transition:    all .1s ease-in-out;
+        transition:         all .1s ease-in-out;
+      }
+    </style>
+    ';
   }
   
   /**
@@ -1053,7 +1115,7 @@ class Envato_WP_Toolkit {
     } // end if
 
   }
-
+  
 }
 
 /**
