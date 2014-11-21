@@ -35,6 +35,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 = 1.7.1 =
 * Added: Ability to deactivate the Github Updater.
 * Fixed: Stopped `wp_list_themes` from making an API request before credentials have been entered into WordPress.
+* Fixed: Changed the menu position and load priority to stop Mojo Marketplace from hiding the Envato Toolkit menu item.
 
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.

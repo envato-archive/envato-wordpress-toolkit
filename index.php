@@ -142,9 +142,9 @@ class Envato_WP_Toolkit {
      * add envato menu item, change menu filter for multisite
      */
     if ( is_multisite() ) {
-      add_action( 'network_admin_menu', array( $this, '_envato_menu' ) );
+      add_action( 'network_admin_menu', array( $this, '_envato_menu' ), 101 );
     } else {
-      add_action( 'admin_menu', array( $this, '_envato_menu' ) );
+      add_action( 'admin_menu', array( $this, '_envato_menu' ), 101 );
     }
     
     /**
@@ -195,7 +195,7 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
-    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 59 );
+    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 58 );
     
     add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
     add_action('admin_print_styles-' . $menu_page, array( $this, '_envato_load_styles' ) );
