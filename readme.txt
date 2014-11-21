@@ -40,6 +40,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 * Added: New i18n file and changed the domain from `envato` to `envato-wordpress-toolkit` to avoid potential conflicts.
 * Fixed: Changed the UI so it now has tabs for better content separation.
 * Fixed: Now uses the Customizer to preview installed themes.
+* Fixed: Fix an issue that caused the timeout to be set high globally.
 
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.

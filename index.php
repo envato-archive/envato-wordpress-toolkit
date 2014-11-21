@@ -1109,21 +1109,22 @@ class Envato_WP_Toolkit {
    *
    * @access    private
    * @since     1.0
+   * @updated   1.7.1
    */
-  public function _http_request_args( $r ){
-    if ( (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
+  public function _http_request_args( $r ) {
+    if ( isset( $_GET['page'] ) && $_GET['page'] == EWPT_PLUGIN_SLUG && (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
       try {
         $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
       } catch ( Exception $e ) {
         $options = get_option( EWPT_PLUGIN_SLUG );
-        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification" href="javascript:;">Dismiss this.</a>', $e->getMessage() );
+        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification">Dismiss this.</a>', $e->getMessage() );
         $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . $this->ajax_notification_nonce . '</span></p>';
         $options['env_errors']['max_execution_time'] = $env_error;
         update_option( EWPT_PLUGIN_SLUG, $options );
       }
+      $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
     }
-
-    $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
+    
     return $r;
   }
 
