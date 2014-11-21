@@ -99,9 +99,17 @@ class Envato_Protected_API {
     if ( $user_name == '' ) {
       $user_name = $this->user_name;
     }
+    
+    if ( $user_name == '' ) {
+      $this->set_error( 'user_name', __( 'Please enter your Envato Marketplace Username.', 'envato' ) );
+    }
       
     if ( $set_data !== '' ) {
       $set_data = ":$set_data";
+    }
+    
+    if ( $errors = $this->api_errors() ) {
+      return $errors;
     }
       
     $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
@@ -145,8 +153,18 @@ class Envato_Protected_API {
    * @updated   1.3
    */
   public function wp_list_themes( $allow_cache = true, $timeout = 300 ) {
-  
-    return $this->private_user_data( 'wp-list-themes', $this->user_name, '', $allow_cache, $timeout );
+    
+    if ( $this->user_name == '' ) {
+      $this->set_error( 'user_name', __( 'Please enter your Envato Marketplace Username.', 'envato' ) );
+    }
+    
+    $themes = $this->private_user_data( 'wp-list-themes', $this->user_name, '', $allow_cache, $timeout );
+    
+    if ( $errors = $this->api_errors() ) {
+      return $errors;
+    }
+    
+    return $themes;
     
   }
   
