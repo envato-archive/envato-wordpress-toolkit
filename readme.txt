@@ -33,6 +33,8 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 == Changelog ==
 
 = 1.7.1 =
+* Fixed: Stop Mojo Marketplace from tracking your movements and causing long or hanging page loads.
+* Fixed: Fix an issue that caused the timeout to be set high globally.
 * Added: Ability to deactivate the Github Updater.
 * Fixed: Stopped `wp_list_themes` from making an API request before credentials have been entered into WordPress.
 * Fixed: Changed the menu position and load priority to stop Mojo Marketplace from hiding the Envato Toolkit menu item.
@@ -40,7 +42,6 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 * Added: New i18n file and changed the domain from `envato` to `envato-wordpress-toolkit` to avoid potential conflicts.
 * Fixed: Changed the UI so it now has tabs for better content separation.
 * Fixed: Now uses the Customizer to preview installed themes.
-* Fixed: Fix an issue that caused the timeout to be set high globally.
 
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.

@@ -219,6 +219,12 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
+    
+    /**
+     * Stop Mojo Marketplace from tracking your movements!
+     */
+    remove_action( 'admin_footer', 'mm_ux_log', 9 );
+    
     $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato-wordpress-toolkit' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), null, 58 );
     
     add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
