@@ -448,14 +448,23 @@ class Envato_WP_Toolkit {
               
               /* Links list */
               if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
-                $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Activate', 'envato-wordpress-toolkit' ) . '</a>';
-                $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a>';
-                $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
-                $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '</a>';
+                
+                $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Activate', 'envato-wordpress-toolkit' ) . '</a> |';
+                
+                $links[] = '<a href="' . network_admin_url( 'customize.php?theme=' . urlencode( $template ) ) . '&return=' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . urlencode( '&' ) . 'tab=themes" class="load-customize hide-if-no-customize" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a> <span class="hide-if-no-customize">|</span>';
+                
+                $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview hide-if-customize" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a> <span class="hide-if-customize">|</span>';
+                
+                $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a> |';
+                
+                $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '</a> |';
+                
                 if ( ! empty( $theme_backup_uri ) ) {
-                  $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a>';
+                  $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a> |';
                 }
-                $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
+                
+                $content.= '<div class="update-info">' . implode( ' ', $links ) . '</div>';
+                
               }
               
               /**
