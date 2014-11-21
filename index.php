@@ -482,24 +482,33 @@ class Envato_WP_Toolkit {
                 $parent_file = 'themes.php';
                 $options = array();
                 if ( is_array( $submenu ) && isset( $submenu['themes.php'] ) ) {
-                  foreach ( (array) $submenu['themes.php'] as $item ) {
-                    if ( 'themes.php' == $item[2] || 'theme-editor.php' == $item[2] )
-                      continue;
-                    if ( ! empty( $submenu[$item[2]] ) ) {
-                      $submenu[$item[2]] = array_values( $submenu[$item[2]] );
-                      $menu_hook = get_plugin_page_hook($submenu[$item[2]][0][2], $item[2]);
-                      if ( file_exists( ABSPATH . PLUGINDIR . "/{$submenu[$item[2]][0][2]}" ) || ! empty( $menu_hook ) )
-                        $options[] = "<a href='admin.php?page={$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
-                      else
-                        $options[] = "<a href='{$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
-                    } else if ( current_user_can( $item[1] ) ) {
-                      if ( file_exists(ABSPATH . 'wp-admin/' . $item[2]) )
-                        $options[] = "<a href='{$item[2]}'>{$item[0]}</a>";
-                      else
-                        $options[] = "<a href='themes.php?page={$item[2]}'>{$item[0]}</a>";
-                    }
-                  }
-                }
+              		foreach ( (array) $submenu['themes.php'] as $item) {
+              			$class = '';
+              			if ( 'themes.php' == $item[2] || 'theme-editor.php' == $item[2] )
+              				continue;
+              			// 0 = name, 1 = capability, 2 = file
+              			if ( ( strcmp($self, $item[2]) == 0 && empty($parent_file)) || ($parent_file && ($item[2] == $parent_file)) )
+              				$class = ' class="current"';
+              			if ( !empty($submenu[$item[2]]) ) {
+              				$submenu[$item[2]] = array_values($submenu[$item[2]]); // Re-index.
+              				$menu_hook = get_plugin_page_hook($submenu[$item[2]][0][2], $item[2]);
+              				if ( file_exists(WP_PLUGIN_DIR . "/{$submenu[$item[2]][0][2]}") || !empty($menu_hook))
+              					$options[] = "<a href='admin.php?page={$submenu[$item[2]][0][2]}'$class>{$item[0]}</a>";
+              				else
+              					$options[] = "<a href='{$submenu[$item[2]][0][2]}'$class>{$item[0]}</a>";
+              			} else if ( current_user_can($item[1]) ) {
+              				$menu_file = $item[2];
+              				if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
+              					$menu_file = substr( $menu_file, 0, $pos );
+              				if ( file_exists( ABSPATH . "wp-admin/$menu_file" ) ) {
+              					$options[] = "<a href='{$item[2]}'$class>{$item[0]}</a>";
+              				} else {
+              					$options[] = "<a href='themes.php?page={$item[2]}'$class>{$item[0]}</a>";
+              				}
+              			}
+              		}
+              	}
+	
                 if ( ! empty( $theme_backup_uri ) ) {
                   $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a>';
                 }
