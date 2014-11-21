@@ -478,7 +478,7 @@ class Envato_WP_Toolkit {
                * It was pulled from wp-admin/themes.php with minor tweaks
                */
               if ( $current_stylesheet == $stylesheet ) {
-                global $submenu;
+                global $self, $submenu;
                 $parent_file = 'themes.php';
                 $options = array();
                 if ( is_array( $submenu ) && isset( $submenu['themes.php'] ) ) {
@@ -1132,7 +1132,7 @@ class Envato_WP_Toolkit {
         $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
       } catch ( Exception $e ) {
         $options = get_option( EWPT_PLUGIN_SLUG );
-        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification">Dismiss this.</a>', $e->getMessage() );
+        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a href="#" id="dismiss-ajax-notification">Dismiss this.</a>', $e->getMessage() );
         $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . $this->ajax_notification_nonce . '</span></p>';
         $options['env_errors']['max_execution_time'] = $env_error;
         update_option( EWPT_PLUGIN_SLUG, $options );
