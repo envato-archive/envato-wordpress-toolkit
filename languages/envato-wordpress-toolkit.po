@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Envato WordPress Toolkit\n"
-"POT-Creation-Date: 2014-11-21 04:26-0800\n"
-"PO-Revision-Date: 2014-11-21 04:26-0800\n"
+"POT-Creation-Date: 2014-11-21 05:40-0800\n"
+"PO-Revision-Date: 2014-11-21 05:41-0800\n"
 "Last-Translator: Derek Herman <derek@valendesigns.com>\n"
 "Language-Team: Envato\n"
 "Language: English\n"
@@ -41,63 +41,59 @@ msgstr ""
 msgid "Theme Deleted."
 msgstr ""
 
-#: ../index.php:378
-msgid "Save Settings"
-msgstr ""
-
-#: ../index.php:444
+#: ../index.php:433
 #, php-format
 msgid ""
 "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update."
 msgstr ""
 
-#: ../index.php:447
+#: ../index.php:436
 msgid ""
 "Updating this theme will lose any customizations you have made. 'Cancel' to "
 "stop, 'OK' to update."
 msgstr ""
 
-#: ../index.php:462
+#: ../index.php:451
 #, php-format
 msgid "Activate &#8220;%s&#8221;"
 msgstr ""
 
-#: ../index.php:462
+#: ../index.php:451
 msgid "Activate"
 msgstr ""
 
-#: ../index.php:463
+#: ../index.php:452
 #, php-format
 msgid "Preview &#8220;%s&#8221;"
 msgstr ""
 
-#: ../index.php:463
+#: ../index.php:452
 msgid "Preview"
 msgstr ""
 
-#: ../index.php:464
+#: ../index.php:453
 #, php-format
 msgid "Delete &#8220;%s&#8221;"
 msgstr ""
 
-#: ../index.php:464
+#: ../index.php:453
 msgid "Delete"
 msgstr ""
 
-#: ../index.php:465
+#: ../index.php:454
 #, php-format
 msgid "View version %1$s details"
 msgstr ""
 
-#: ../index.php:467 ../index.php:500
+#: ../index.php:456 ../index.php:489
 msgid "Download Backup"
 msgstr ""
 
-#: ../index.php:503
+#: ../index.php:492
 msgid "Options:"
 msgstr ""
 
-#: ../index.php:509
+#: ../index.php:498
 #, php-format
 msgid ""
 "The template files are located in <code>%2$s</code>. The stylesheet files "
@@ -105,23 +101,23 @@ msgid ""
 "<strong>%5$s</strong>. Changes made to the templates will affect both themes."
 msgstr ""
 
-#: ../index.php:511
+#: ../index.php:500
 #, php-format
 msgid "All of this theme&#8217;s files are located in <code>%2$s</code>."
 msgstr ""
 
-#: ../index.php:517
+#: ../index.php:506
 msgid "Tags: "
 msgstr ""
 
-#: ../index.php:523
+#: ../index.php:512
 #, php-format
 msgid ""
 "There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox "
 "thickbox-preview\" title=\"%1$s\">View version %3$s details</a>."
 msgstr ""
 
-#: ../index.php:525
+#: ../index.php:514
 #, php-format
 msgid ""
 "There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox "
@@ -129,14 +125,14 @@ msgid ""
 "\"%4$s\" %5$s>update automatically</a>."
 msgstr ""
 
-#: ../index.php:529
+#: ../index.php:518
 #, php-format
 msgid ""
 "%1$s has not been installed. <a href=\"%2$s\" class=\"thickbox thickbox-"
 "preview\" title=\"%1$s\">View version %3$s details</a>."
 msgstr ""
 
-#: ../index.php:531
+#: ../index.php:520
 #, php-format
 msgid ""
 "%1$s has not been installed. <a href=\"%2$s\" class=\"thickbox thickbox-"
@@ -144,43 +140,47 @@ msgid ""
 "\">install automatically</a>."
 msgstr ""
 
-#: ../index.php:572
+#: ../index.php:562
 msgid "<h3>Current Theme</h3>"
 msgstr ""
 
-#: ../index.php:579
+#: ../index.php:569
 msgid "<h3>Available Themes</h3>"
 msgstr ""
 
-#: ../index.php:681
+#: ../index.php:602
+msgid "Save Settings"
+msgstr ""
+
+#: ../index.php:707
 msgid "User Account Information"
 msgstr ""
 
-#: ../index.php:682
+#: ../index.php:708
 msgid "Marketplace Username"
 msgstr ""
 
-#: ../index.php:683
+#: ../index.php:709
 msgid "Secret API Key"
 msgstr ""
 
-#: ../index.php:684
+#: ../index.php:710
 msgid "Backup Information"
 msgstr ""
 
-#: ../index.php:685
+#: ../index.php:711
 msgid "Skip Theme Backup"
 msgstr ""
 
-#: ../index.php:686
+#: ../index.php:712
 msgid "Github Updater"
 msgstr ""
 
-#: ../index.php:687
+#: ../index.php:713
 msgid "Deactivate Github Updater"
 msgstr ""
 
-#: ../index.php:699
+#: ../index.php:725
 msgid ""
 "To obtain your API Key, visit your \"My Settings\" page on any of the Envato "
 "Marketplaces. Once a valid connection has been made any changes to the API "
@@ -191,7 +191,7 @@ msgid ""
 "possible the author has not made it available for auto install yet."
 msgstr ""
 
-#: ../index.php:737
+#: ../index.php:763
 msgid ""
 "This plugin will automatically save your theme as a ZIP archive before it "
 "does an upgrade. The directory those backups get saved to is <code>wp-"
@@ -201,7 +201,7 @@ msgid ""
 "you don't want to backup your theme you can check the box below."
 msgstr ""
 
-#: ../index.php:763
+#: ../index.php:789
 #, php-format
 msgid ""
 "This option lets you deactivate the %s class, so it does not load. If you "
@@ -209,33 +209,33 @@ msgid ""
 "plugin will look for a new version on Github; check it and it stops looking."
 msgstr ""
 
-#: ../index.php:794
+#: ../index.php:820
 #, php-format
 msgid "Return to %s"
 msgstr ""
 
-#: ../index.php:819
+#: ../index.php:845
 msgid "You do not have sufficient permissions to install themes for this site."
 msgstr ""
 
-#: ../index.php:831
+#: ../index.php:857
 #, php-format
 msgid "Installing Theme: %s"
 msgstr ""
 
-#: ../index.php:860 ../index.php:887 ../index.php:920
+#: ../index.php:886 ../index.php:913 ../index.php:946
 msgid "You do not have sufficient permissions to update themes for this site."
 msgstr ""
 
-#: ../index.php:889
+#: ../index.php:915
 msgid "Update Theme"
 msgstr ""
 
-#: ../index.php:923
+#: ../index.php:949
 msgid "You do not have sufficient permissions to delete themes for this site."
 msgstr ""
 
-#: ../index.php:995
+#: ../index.php:1021
 msgid ""
 "This .htaccess file ensures that other people cannot download your backup "
 "files."
