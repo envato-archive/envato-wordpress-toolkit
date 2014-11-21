@@ -469,7 +469,7 @@ class Envato_WP_Toolkit {
                   $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a> |';
                 }
                 
-                $content.= '<div class="update-info">' . implode( ' ', $links ) . '</div>';
+                $content.= '<div class="update-info">' . rtrim( implode( ' ', $links ), ' |' ) . '</div>';
                 
               }
               
