@@ -367,7 +367,7 @@ class Envato_WP_Toolkit {
     /* display normal views */
     } else {
       echo '<div class="wrap">';
-        echo '<div id="icon-themes" class="icon32"></div><h2>' . EWPT_PLUGIN_NAME . '</h2>';
+        echo '<h2>' . EWPT_PLUGIN_NAME . '</h2>';
         echo '
         <form name="verification_form" method="post" action="' . admin_url( 'options.php' ) . '" id="api-verification">';
           wp_nonce_field( 'update-options' );
