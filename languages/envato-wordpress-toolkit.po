@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Envato WordPress Toolkit\n"
-"POT-Creation-Date: 2014-11-21 03:58-0800\n"
-"PO-Revision-Date: 2014-11-21 03:58-0800\n"
+"POT-Creation-Date: 2014-11-21 04:26-0800\n"
+"PO-Revision-Date: 2014-11-21 04:26-0800\n"
 "Last-Translator: Derek Herman <derek@valendesigns.com>\n"
 "Language-Team: Envato\n"
 "Language: English\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../index.php:68 ../index.php:763
+#: ../index.php:68
 msgid "Envato WordPress Toolkit"
 msgstr ""
 
@@ -204,14 +204,9 @@ msgstr ""
 #: ../index.php:763
 #, php-format
 msgid ""
-"The Envato WordPress Toolkit is not hosted in the WordPress.org plugin "
-"repository and needed a way to be updated like other plugins. So we added "
-"the ability for the plugin to update itself via our %s Github repository a "
-"while back. However, it's possible that the %s class is slowing down your "
-"admin page loads. This option will let you deactivate the updater so the "
-"class does not loads and admin speeds will go back to normal. If you want to "
-"update the plugin in the future, just uncheck this option and the plugin "
-"will look for a new version on Github; check it and it stops looking."
+"This option lets you deactivate the %s class, so it does not load. If you "
+"want to update the plugin in the future, just uncheck this option and the "
+"plugin will look for a new version on Github; check it and it stops looking."
 msgstr ""
 
 #: ../index.php:794

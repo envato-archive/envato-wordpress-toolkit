@@ -760,7 +760,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_github_updater() {
-    printf( __( 'The Envato WordPress Toolkit is not hosted in the WordPress.org plugin repository and needed a way to be updated like other plugins. So we added the ability for the plugin to update itself via our %s Github repository a while back. However, it\'s possible that the %s class is slowing down your admin page loads. This option will let you deactivate the updater so the class does not loads and admin speeds will go back to normal. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato-wordpress-toolkit' ), '<a href="https://github.com/envato/envato-wordpress-toolkit" target="_blank">' . __( 'Envato WordPress Toolkit', 'envato-wordpress-toolkit' ) . '</a>', '<code>WP_GitHub_Updater</code>' );
+    printf( __( 'This option lets you deactivate the %s class, so it does not load. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato-wordpress-toolkit' ), '<code>WP_GitHub_Updater</code>' );
   }
   
   /**
