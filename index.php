@@ -65,7 +65,7 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Name
      */
-    define( 'EWPT_PLUGIN_NAME', __( 'Envato WordPress Toolkit', 'envato' ) );
+    define( 'EWPT_PLUGIN_NAME', __( 'Envato WordPress Toolkit', 'envato-wordpress-toolkit' ) );
     
     /**
      * Plugin Slug
@@ -153,6 +153,11 @@ class Envato_WP_Toolkit {
     add_action( 'admin_head', array( $this, '_menu_icon' ) );
     
     /**
+     * Load text domain
+     */
+    add_action( 'plugins_loaded', array( $this, '_load_textdomain' ) );
+    
+    /**
      * Create AJAX nonce
      */
     add_action( 'init', array( $this, '_ajax_notification_nonce' ) );
@@ -173,6 +178,20 @@ class Envato_WP_Toolkit {
 
   }
   
+  /**
+     * Loads the text domain.
+     *
+     * @return    void
+     *
+     * @access    private
+     * @since     1.7.1
+     */
+    public function _load_textdomain() {
+
+      load_plugin_textdomain( 'envato-wordpress-toolkit', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+      
+    }
+    
   /**
    * Create a nonce for AJAX notifications
    *
@@ -200,7 +219,7 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
-    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), null, 58 );
+    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato-wordpress-toolkit' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), null, 58 );
     
     add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
     add_action('admin_print_styles-' . $menu_page, array( $this, '_envato_load_styles' ) );
@@ -301,7 +320,7 @@ class Envato_WP_Toolkit {
    */
   public function _envato_menu_page() {
     if ( ! current_user_can( 'manage_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to access this page.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to access this page.', 'envato-wordpress-toolkit' ) );
     
     /* read in existing API value from database */
     $options = get_option( EWPT_PLUGIN_SLUG );
@@ -333,9 +352,9 @@ class Envato_WP_Toolkit {
     
     /* display update messages */
     if ( empty( $errors ) ) {
-      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'User Settings Updated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Activated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Deleted.', 'envato' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'User Settings Updated.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Activated.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Deleted.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
     }
 
     /* execute theme actions */
@@ -356,7 +375,7 @@ class Envato_WP_Toolkit {
           do_settings_sections( EWPT_PLUGIN_SLUG );
           echo '
           <p class="submit">
-            <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save Settings', 'envato' ) . '" />
+            <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save Settings', 'envato-wordpress-toolkit' ) . '" />
           </p>
         </form>';
         /* no errors & themes are available */
@@ -422,10 +441,10 @@ class Envato_WP_Toolkit {
                 $activate_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ) ), 'switch-theme_' . $template );
                 $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
                 $delete_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet ), 'delete-theme_' . $stylesheet );
-                $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato' ), $title ) ) . '\') ) {return true;}return false;"';
+                $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato-wordpress-toolkit' ), $title ) ) . '\') ) {return true;}return false;"';
                 $install_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
                 $update_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id ), 'upgrade-theme_' . $stylesheet );
-                $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato' ) ) . '\') ) {return true;}return false;"';
+                $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato-wordpress-toolkit' ) ) . '\') ) {return true;}return false;"';
                 
                 /* Theme Title message */
                 $content.= '<h3>' . $title . ' ' . $version . ' by ' . $author . '</h3>';
@@ -440,12 +459,12 @@ class Envato_WP_Toolkit {
                 
                 /* Links list */
                 if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
-                  $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Activate', 'envato' ) . '</a>';
-                  $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Preview', 'envato' ) . '</a>';
-                  $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
-                  $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '</a>';
+                  $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Activate', 'envato-wordpress-toolkit' ) . '</a>';
+                  $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a>';
+                  $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
+                  $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '</a>';
                   if ( ! empty( $theme_backup_uri ) ) {
-                    $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato' ) ) . '</a>';
+                    $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a>';
                   }
                   $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
                 }
@@ -478,18 +497,18 @@ class Envato_WP_Toolkit {
                     }
                   }
                   if ( ! empty( $theme_backup_uri ) ) {
-                    $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato' ) ) . '</a>';
+                    $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a>';
                   }
                   if ( ! empty( $options ) )
-                    $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
+                    $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato-wordpress-toolkit' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
                 }
                 
                 /* Theme path information */
                 if ( current_user_can( 'edit_themes' ) && $installed ) {
                   if ( $parent_theme ) {
-                     $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
+                     $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.', 'envato-wordpress-toolkit' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
                   } else {
-                     $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
+                     $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.', 'envato-wordpress-toolkit' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
                   }
                 }
                 
@@ -501,15 +520,15 @@ class Envato_WP_Toolkit {
                 /* Upgrade/Install message */
                 if ( $has_update ) {
                   if ( ! current_user_can( 'update_themes' ) ) {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
+                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version );
                   } else {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
                   }
                 } else if ( ! $installed ) {
                   if ( ! current_user_can( 'update_themes' ) ) {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
+                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version );
                   } else {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
+                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
                   }
                 }
                 
@@ -659,13 +678,13 @@ class Envato_WP_Toolkit {
     $this->_admin_update_check();
     $this->_admin_init_before();
     register_setting( EWPT_PLUGIN_SLUG, EWPT_PLUGIN_SLUG );
-    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato' ), array( $this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato' ), array( $this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_field( 'api_key', __( 'Secret API Key', 'envato' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_section( 'backup_info', __( 'Backup Information', 'envato' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
-    add_settings_section( 'github_updater', __( 'Github Updater', 'envato' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
+    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato-wordpress-toolkit' ), array( $this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato-wordpress-toolkit' ), array( $this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_field( 'api_key', __( 'Secret API Key', 'envato-wordpress-toolkit' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_section( 'backup_info', __( 'Backup Information', 'envato-wordpress-toolkit' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato-wordpress-toolkit' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
+    add_settings_section( 'github_updater', __( 'Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
   }
   
   /**
@@ -677,7 +696,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_user_account_info() {
-    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces. Once a valid connection has been made any changes to the API key below for this username will not effect the results for 5 minutes because they\'re cached in the database. If you have already made an API connection and just purchase a theme and it\'s not showing up, wait five minutes and refresh the page. If the theme is still not showing up, it\'s possible the author has not made it available for auto install yet.', 'envato' );
+    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces. Once a valid connection has been made any changes to the API key below for this username will not effect the results for 5 minutes because they\'re cached in the database. If you have already made an API connection and just purchase a theme and it\'s not showing up, wait five minutes and refresh the page. If the theme is still not showing up, it\'s possible the author has not made it available for auto install yet.', 'envato-wordpress-toolkit' );
   }
   
   /**
@@ -715,7 +734,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_backup_information() {
-    _e( 'This plugin will automatically save your theme as a ZIP archive before it does an upgrade. The directory those backups get saved to is <code>wp-content/envato-backups</code>. However, if you\'re experiencing problems while attempting to upgrade, it\'s likely to be a permissions issue and you may want to manually backup your theme before upgrading. Alternatively, if you don\'t want to backup your theme you can check the box below.', 'envato' );
+    _e( 'This plugin will automatically save your theme as a ZIP archive before it does an upgrade. The directory those backups get saved to is <code>wp-content/envato-backups</code>. However, if you\'re experiencing problems while attempting to upgrade, it\'s likely to be a permissions issue and you may want to manually backup your theme before upgrading. Alternatively, if you don\'t want to backup your theme you can check the box below.', 'envato-wordpress-toolkit' );
   }
   
   /**
@@ -741,7 +760,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_github_updater() {
-    printf( __( 'The Envato WordPress Toolkit is not hosted in the WordPress.org plugin repository and needed a way to be updated like other plugins. So we added the ability for the plugin to update itself via our %s Github repository a while back. However, it\'s possible that the %s class is slowing down your admin page loads. This option will let you deactivate the updater so the class does not loads and admin speeds will go back to normal. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato' ), '<a href="https://github.com/envato/envato-wordpress-toolkit" target="_blank">' . __( 'Envato WordPress Toolkit', 'envato' ) . '</a>', '<code>WP_GitHub_Updater</code>' );
+    printf( __( 'The Envato WordPress Toolkit is not hosted in the WordPress.org plugin repository and needed a way to be updated like other plugins. So we added the ability for the plugin to update itself via our %s Github repository a while back. However, it\'s possible that the %s class is slowing down your admin page loads. This option will let you deactivate the updater so the class does not loads and admin speeds will go back to normal. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato-wordpress-toolkit' ), '<a href="https://github.com/envato/envato-wordpress-toolkit" target="_blank">' . __( 'Envato WordPress Toolkit', 'envato-wordpress-toolkit' ) . '</a>', '<code>WP_GitHub_Updater</code>' );
   }
   
   /**
@@ -772,7 +791,7 @@ class Envato_WP_Toolkit {
       $action = $_GET['action'];
       if ( $page == EWPT_PLUGIN_SLUG ) {
         if ( 'install-theme' == $action || 'upgrade-theme' == $action ) {
-          $actions['themes_page'] = '<a href="' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) . '</a>';
+          $actions['themes_page'] = '<a href="' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato-wordpress-toolkit' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato-wordpress-toolkit' ), EWPT_PLUGIN_NAME ) . '</a>';
         }
       }
     }
@@ -797,7 +816,7 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'install-theme_' . $theme );
     
     if ( ! current_user_can( 'install_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to install themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to install themes for this site.', 'envato-wordpress-toolkit' ) );
     
     /* setup theme info in $api array */
     $api = (object) array();
@@ -809,7 +828,7 @@ class Envato_WP_Toolkit {
       }
     }
     
-    $title = sprintf( __( 'Installing Theme: %s', 'envato' ), $api->name . ' ' . $api->version );
+    $title = sprintf( __( 'Installing Theme: %s', 'envato-wordpress-toolkit' ), $api->name . ' ' . $api->version );
     $nonce = 'install-theme_' . $theme;
     $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $theme );
     $type = 'web';
@@ -838,7 +857,7 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'switch-theme_' . $template );
     
     if ( ! current_user_can( 'switch_themes' ) && ! current_user_can( 'edit_theme_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! function_exists( 'switch_theme' ) )
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
@@ -865,9 +884,9 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'upgrade-theme_' . $theme );
     
     if ( ! current_user_can( 'update_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
-    $title = __( 'Update Theme', 'envato' );
+    $title = __( 'Update Theme', 'envato-wordpress-toolkit' );
     $nonce = 'upgrade-theme_' . $theme;
     $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&theme=' . $theme . '&item_id=' . $item_id );
     
@@ -898,10 +917,10 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'delete-theme_' . $template );
 
     if ( ! current_user_can( 'switch_themes' ) && ! current_user_can( 'edit_theme_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! current_user_can( 'delete_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to delete themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to delete themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! function_exists( 'delete_theme' ) )
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
@@ -973,7 +992,7 @@ class Envato_WP_Toolkit {
     /* Secure the directory with a .htaccess file */
     $htaccess = $path . '.htaccess';
     
-    $contents[]  = '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato' );
+    $contents[]  = '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato-wordpress-toolkit' );
     $contents[] = '';
     $contents[] = '<IfModule mod_rewrite.c>';
     $contents[] = 'RewriteEngine On';

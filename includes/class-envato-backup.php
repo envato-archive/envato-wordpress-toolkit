@@ -389,7 +389,7 @@ class Envato_Backup {
       return true;
     
     if ( ! file_exists( $this->archive_filepath() ) )
-      $this->error( $this->archive_method(), __( 'The backup file was not created', 'envato' ) );
+      $this->error( $this->archive_method(), __( 'The backup file was not created', 'envato-wordpress-toolkit' ) );
     
     /* Verify using the zip command if possible */
     if ( $this->zip_command_path ) {
@@ -458,7 +458,7 @@ class Envato_Backup {
     }
     
     if ( ! empty( $this->unreadable_files ) )
-      $this->warning( $this->archive_method(), __( 'The following files are unreadable and could not be backed up: ', 'envato' ) . implode( ', ', $this->unreadable_files ) );
+      $this->warning( $this->archive_method(), __( 'The following files are unreadable and could not be backed up: ', 'envato-wordpress-toolkit' ) . implode( ', ', $this->unreadable_files ) );
     
     return $this->files;
   

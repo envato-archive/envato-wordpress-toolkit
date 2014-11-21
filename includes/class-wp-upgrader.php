@@ -19,17 +19,17 @@ if ( class_exists( 'Theme_Upgrader' ) ) {
   class Envato_Theme_Upgrader extends Theme_Upgrader {
     function upgrade_strings() {
       parent::upgrade_strings();
-      $this->strings['downloading_package'] = __( 'Downloading upgrade package from the Envato API&#8230;', 'envato' );
+      $this->strings['downloading_package'] = __( 'Downloading upgrade package from the Envato API&#8230;', 'envato-wordpress-toolkit' );
       
       $options = get_option( EWPT_PLUGIN_SLUG );
       if ( ! isset( $options['skip_theme_backup'] ) ) {
-        $this->strings['remove_old'] = __( 'Backing up & removing the old version of the theme&#8230;', 'envato' );
+        $this->strings['remove_old'] = __( 'Backing up & removing the old version of the theme&#8230;', 'envato-wordpress-toolkit' );
       }        
     }
   
     function install_strings() {
       parent::install_strings();
-      $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;', 'envato' );
+      $this->strings['downloading_package'] = __( 'Downloading install package from the Envato API&#8230;', 'envato-wordpress-toolkit' );
     }
     
     function upgrade( $theme, $package = array() ) {
