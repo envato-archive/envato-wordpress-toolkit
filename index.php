@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
- * Version: 1.7.0
+ * Version: 1.7.1
  * Author: Envato
  * Author URI: http://envato.com
  */
@@ -60,12 +60,12 @@ class Envato_WP_Toolkit {
     /**
      * Plugin Version
      */
-    define( 'EWPT_PLUGIN_VER', '1.7.0' );
+    define( 'EWPT_PLUGIN_VER', '1.7.1' );
     
     /**
      * Plugin Name
      */
-    define( 'EWPT_PLUGIN_NAME', __( 'Envato WordPress Toolkit', 'envato' ) );
+    define( 'EWPT_PLUGIN_NAME', __( 'Envato WordPress Toolkit', 'envato-wordpress-toolkit' ) );
     
     /**
      * Plugin Slug
@@ -121,7 +121,8 @@ class Envato_WP_Toolkit {
     if ( ! class_exists( 'Envato_Protected_API' ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-envato-api.php' );
     }
-    if ( ! class_exists( 'WP_GitHub_Updater' ) ) {
+    $options = get_option( EWPT_PLUGIN_SLUG );
+    if ( ! class_exists( 'WP_GitHub_Updater' ) && ! isset( $options['deactivate_github_updater'] ) ) {
       require_once( EWPT_PLUGIN_DIR . 'includes/class-github-updater.php' );
     }
   }
@@ -141,10 +142,20 @@ class Envato_WP_Toolkit {
      * add envato menu item, change menu filter for multisite
      */
     if ( is_multisite() ) {
-      add_action( 'network_admin_menu', array( $this, '_envato_menu' ) );
+      add_action( 'network_admin_menu', array( $this, '_envato_menu' ), 101 );
     } else {
-      add_action( 'admin_menu', array( $this, '_envato_menu' ) );
+      add_action( 'admin_menu', array( $this, '_envato_menu' ), 101 );
     }
+    
+    /**
+     * Menu Icon CSS
+     */
+    add_action( 'admin_head', array( $this, '_menu_icon' ) );
+    
+    /**
+     * Load text domain
+     */
+    add_action( 'plugins_loaded', array( $this, '_load_textdomain' ) );
     
     /**
      * Create AJAX nonce
@@ -167,6 +178,20 @@ class Envato_WP_Toolkit {
 
   }
   
+  /**
+     * Loads the text domain.
+     *
+     * @return    void
+     *
+     * @access    private
+     * @since     1.7.1
+     */
+    public function _load_textdomain() {
+
+      load_plugin_textdomain( 'envato-wordpress-toolkit', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+      
+    }
+    
   /**
    * Create a nonce for AJAX notifications
    *
@@ -194,10 +219,73 @@ class Envato_WP_Toolkit {
    * @return    void
    */
   public function _envato_menu() {
-    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), EWPT_PLUGIN_URL . 'assets/images/envato.png', 59 );
+    
+    /**
+     * Stop Mojo Marketplace from tracking your movements!
+     */
+    remove_action( 'admin_footer', 'mm_ux_log', 9 );
+    
+    $menu_page = add_menu_page( EWPT_PLUGIN_NAME, __( 'Envato Toolkit', 'envato-wordpress-toolkit' ), 'manage_options', EWPT_PLUGIN_SLUG, array( $this, '_envato_menu_page' ), null, 58 );
     
     add_action('admin_print_scripts-' . $menu_page, array( $this, '_envato_load_scripts' ) );
     add_action('admin_print_styles-' . $menu_page, array( $this, '_envato_load_styles' ) );
+  }
+  
+  /**
+   * Menu Font Icon CSS
+   *
+   * Changes the menu image icon to a font based version.
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string      Return icon CSS.
+   */
+  public function _menu_icon() {
+    global $wp_version;
+    
+    $wp_38plus = version_compare( $wp_version, '3.8', '>=' ) ? true : false;
+    $fontsize = $wp_38plus ? '20px' : '16px';
+    $wp_38minus = '';
+    
+    if ( ! $wp_38plus ) {
+      $wp_38minus = '
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image {
+        background: none;
+      }
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image:before {
+        padding-left: 6px;
+      }';
+    }
+  
+    echo '
+    <style>
+      @font-face {
+        font-family: "envato";
+        src:url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.eot?20141121");
+        src:url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.eot?#iefix20141121") format("embedded-opentype"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.woff?20141121") format("woff"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.ttf?20141121") format("truetype"),
+          url("' . EWPT_PLUGIN_URL . 'assets/fonts/envato.svg?20141121#envato") format("svg");
+        font-weight: normal;
+        font-style: normal;
+      }
+      #adminmenu .toplevel_page_envato-wordpress-toolkit .menu-icon-generic div.wp-menu-image:before {
+        font: normal ' . $fontsize . '/1 "envato" !important;
+        content: "\e600";
+        speak: none;
+        padding: 6px 0;
+        height: 34px;
+        width: 20px;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-transition: all .1s ease-in-out;
+        -moz-transition:    all .1s ease-in-out;
+        transition:         all .1s ease-in-out;
+      }
+    </style>
+    ';
   }
   
   /**
@@ -238,7 +326,7 @@ class Envato_WP_Toolkit {
    */
   public function _envato_menu_page() {
     if ( ! current_user_can( 'manage_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to access this page.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to access this page.', 'envato-wordpress-toolkit' ) );
     
     /* read in existing API value from database */
     $options = get_option( EWPT_PLUGIN_SLUG );
@@ -247,7 +335,7 @@ class Envato_WP_Toolkit {
     if ( ! empty( $options['env_errors'] ) ) {
       foreach ( $options['env_errors'] as $k => $v ) {
         if ( empty( $options['dismissed_errors'][$k] ) ) {
-          echo '<div class="error">' . $v . '</div>';
+          echo '<div class="error below-h2">' . $v . '</div>';
         }
       }
     }
@@ -264,15 +352,15 @@ class Envato_WP_Toolkit {
     if ( $errors = $this->protected_api->api_errors() ) {
       foreach( $errors as $k => $v ) {
         if ( $k !== 'http_code' && ( $user_name || $api_key ) )
-          echo '<div class="error"><p>' . $v . '</p></div>';
+          echo '<div class="error below-h2"><p>' . $v . '</p></div>';
       }
     }
     
     /* display update messages */
     if ( empty( $errors ) ) {
-      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'User Settings Updated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Activated.', 'envato' ) . '</strong></p></div>' : '';
-      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Deleted.', 'envato' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'settings-updated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'User Settings Updated.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'activated' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Activated.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
+      echo ( isset( $_GET[ 'deleted' ] ) ) ? '<div class="updated below-h2"><p><strong>' . __( 'Theme Deleted.', 'envato-wordpress-toolkit' ) . '</strong></p></div>' : '';
     }
 
     /* execute theme actions */
@@ -284,224 +372,268 @@ class Envato_WP_Toolkit {
       }
     /* display normal views */
     } else {
-      echo '<div class="wrap">';
-        echo '<div id="icon-themes" class="icon32"></div><h2>' . EWPT_PLUGIN_NAME . '</h2>';
-        echo '
-        <form name="verification_form" method="post" action="' . admin_url( 'options.php' ) . '" id="api-verification">';
-          wp_nonce_field( 'update-options' );
-          settings_fields( EWPT_PLUGIN_SLUG );
-          do_settings_sections( EWPT_PLUGIN_SLUG );
-          echo '
-          <p class="submit">
-            <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save Settings', 'envato' ) . '" />
-          </p>
-        </form>';
-        /* no errors & themes are available */
-        if ( empty( $errors ) && count( $themes ) > 0 ) {
+
+      /* no errors & themes are available */
+      if ( empty( $errors ) && count( $themes ) > 0 ) {
+      
+        /* get WP installed themes */
+        if ( function_exists( 'wp_get_themes' ) )
+          $get_themes = wp_get_themes();
+        else
+          $get_themes = get_themes();
+      
+        /* empty premium themes array */
+        $premium_themes = array();
         
-          /* get WP installed themes */
-          if ( function_exists( 'wp_get_themes' ) )
-            $get_themes = wp_get_themes();
-          else
-            $get_themes = get_themes();
-        
-          /* empty premium themes array */
-          $premium_themes = array();
-          
-          /* loop through the marketplace themes */
-          if ( ! empty( $themes ) && is_array( $themes ) ) {
-            foreach( $themes as $theme ) {
+        /* loop through the marketplace themes */
+        if ( ! empty( $themes ) && is_array( $themes ) ) {
+          foreach( $themes as $theme ) {
+            
+            /* setup the defaults */
+            $content = '';
+            $installed = false;
+            $links = array();
+            $current_stylesheet = get_stylesheet();
+            $latest_version = $theme->version;
+            $item_id = $theme->item_id;
+            $template = '';
+            $stylesheet = '';
+            $title = $theme->theme_name;
+            $version = '';
+            $description = $theme->description;
+            $author = $theme->author_name;
+            $parent_theme = '';
+            $tags = '';
+            
+            /* setup the item details */
+            $item_details = $this->protected_api->item_details( $item_id );
+            
+            if ( ! empty( $item_details ) ) {
+            
+              /* get installed theme information */
+              foreach( $get_themes as $k => $v ) {
+                if ( $get_themes[$k]['Title'] == $title && $get_themes[$k]['Author Name'] == $author && $template == '' ) {
+                  $template = $get_themes[$k]['Template'];
+                  $stylesheet = $get_themes[$k]['Stylesheet'];
+                  $title = $get_themes[$k]['Title'];
+                  $version = $get_themes[$k]['Version'];
+                  $description = $get_themes[$k]['Description'];
+                  $author = $get_themes[$k]['Author'];
+                  $screenshot = $get_themes[$k]['Screenshot'];
+                  $stylesheet_dir = $get_themes[$k]['Stylesheet Dir'];
+                  $template_dir = $get_themes[$k]['Template Dir'];
+                  $parent_theme = $get_themes[$k]['Parent Theme'];
+                  $theme_root = $get_themes[$k]['Theme Root'];
+                  $theme_root_uri = $get_themes[$k]['Theme Root URI'];
+                  $tags = $get_themes[$k]['Tags'];
+                  $installed = true;
+                  continue;
+                }
+              }
+
+              $has_update = ( $installed && version_compare( $version, $latest_version, '<' ) ) ? TRUE : FALSE;
+              $details_url = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
+              $activate_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ) ), 'switch-theme_' . $template );
+              $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
+              $delete_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet ), 'delete-theme_' . $stylesheet );
+              $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato-wordpress-toolkit' ), $title ) ) . '\') ) {return true;}return false;"';
+              $install_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
+              $update_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id ), 'upgrade-theme_' . $stylesheet );
+              $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato-wordpress-toolkit' ) ) . '\') ) {return true;}return false;"';
               
-              /* setup the defaults */
-              $content = '';
-              $installed = false;
-              $links = array();
-              $current_stylesheet = get_stylesheet();
-              $latest_version = $theme->version;
-              $item_id = $theme->item_id;
-              $template = '';
-              $stylesheet = '';
-              $title = $theme->theme_name;
-              $version = '';
-              $description = $theme->description;
-              $author = $theme->author_name;
-              $parent_theme = '';
-              $tags = '';
-              
-              /* setup the item details */
-              $item_details = $this->protected_api->item_details( $item_id );
-              
-              if ( ! empty( $item_details ) ) {
-              
-                /* get installed theme information */
-                foreach( $get_themes as $k => $v ) {
-                  if ( $get_themes[$k]['Title'] == $title && $get_themes[$k]['Author Name'] == $author && $template == '' ) {
-                    $template = $get_themes[$k]['Template'];
-                    $stylesheet = $get_themes[$k]['Stylesheet'];
-                    $title = $get_themes[$k]['Title'];
-                    $version = $get_themes[$k]['Version'];
-                    $description = $get_themes[$k]['Description'];
-                    $author = $get_themes[$k]['Author'];
-                    $screenshot = $get_themes[$k]['Screenshot'];
-                    $stylesheet_dir = $get_themes[$k]['Stylesheet Dir'];
-                    $template_dir = $get_themes[$k]['Template Dir'];
-                    $parent_theme = $get_themes[$k]['Parent Theme'];
-                    $theme_root = $get_themes[$k]['Theme Root'];
-                    $theme_root_uri = $get_themes[$k]['Theme Root URI'];
-                    $tags = $get_themes[$k]['Tags'];
-                    $installed = true;
-                    continue;
-                  }
-                }
-  
-                $has_update = ( $installed && version_compare( $version, $latest_version, '<' ) ) ? TRUE : FALSE;
-                $details_url = htmlspecialchars( add_query_arg( array( 'TB_iframe' => 'true', 'width' => 1024, 'height' => 800 ), $item_details->url ) );
-                $activate_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=activate&amp;template=' . urlencode( $template ) . '&amp;stylesheet=' . urlencode( $stylesheet ) ), 'switch-theme_' . $template );
-                $preview_url = htmlspecialchars( add_query_arg( array( 'preview' => 1, 'template' => $template, 'stylesheet' => $stylesheet, 'preview_iframe' => 1, 'TB_iframe' => 'true' ), trailingslashit( esc_url( get_option( 'home' ) ) ) ) );
-                $delete_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $stylesheet ), 'delete-theme_' . $stylesheet );
-                $delete_onclick = 'onclick="if ( confirm(\'' . esc_js( sprintf( __( "You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update.", 'envato' ), $title ) ) . '\') ) {return true;}return false;"';
-                $install_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $item_id ), 'install-theme_' . $item_id );
-                $update_url = wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&amp;theme=' . $stylesheet . '&amp;item_id=' . $item_id ), 'upgrade-theme_' . $stylesheet );
-                $update_onclick = 'onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update.", 'envato' ) ) . '\') ) {return true;}return false;"';
+              /* Theme Title message */
+              $content.= '<h3>' . $title . ' ' . $version . ' by ' . $author . '</h3>';
                 
-                /* Theme Title message */
-                $content.= '<h3>' . $title . ' ' . $version . ' by ' . $author . '</h3>';
-                  
-                /* Theme Description */
-                if ( $description ) {
-                  $content.= '<p class="description">' . $description . '</p>';
-                }
-                
-                /* Theme Backup URI */
-                $theme_backup_uri = $this->_get_theme_backup_uri( $template );
-                
-                /* Links list */
-                if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
-                  $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Activate', 'envato' ) . '</a>';
-                  $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato' ), $title ) ) . '">' . __( 'Preview', 'envato' ) . '</a>';
-                  $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a>';
-                  $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato' ), $latest_version ) ) . '</a>';
-                  if ( ! empty( $theme_backup_uri ) ) {
-                    $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato' ) ) . '</a>';
-                  }
-                  $content.= '<div class="update-info">' . implode( ' | ', $links ) . '</div>';
-                }
-                
-                /**
-                 * This ugly code lists the current theme options
-                 * It was pulled from wp-admin/themes.php with minor tweaks
-                 */
-                if ( $current_stylesheet == $stylesheet ) {
-                  global $submenu;
-                  $parent_file = 'themes.php';
-                  $options = array();
-                  if ( is_array( $submenu ) && isset( $submenu['themes.php'] ) ) {
-                    foreach ( (array) $submenu['themes.php'] as $item ) {
-                      if ( 'themes.php' == $item[2] || 'theme-editor.php' == $item[2] )
-                        continue;
-                      if ( ! empty( $submenu[$item[2]] ) ) {
-                        $submenu[$item[2]] = array_values( $submenu[$item[2]] );
-                        $menu_hook = get_plugin_page_hook($submenu[$item[2]][0][2], $item[2]);
-                        if ( file_exists( ABSPATH . PLUGINDIR . "/{$submenu[$item[2]][0][2]}" ) || ! empty( $menu_hook ) )
-                          $options[] = "<a href='admin.php?page={$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
-                        else
-                          $options[] = "<a href='{$submenu[$item[2]][0][2]}'>{$item[0]}</a>";
-                      } else if ( current_user_can( $item[1] ) ) {
-                        if ( file_exists(ABSPATH . 'wp-admin/' . $item[2]) )
-                          $options[] = "<a href='{$item[2]}'>{$item[0]}</a>";
-                        else
-                          $options[] = "<a href='themes.php?page={$item[2]}'>{$item[0]}</a>";
-                      }
-                    }
-                  }
-                  if ( ! empty( $theme_backup_uri ) ) {
-                    $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato' ) ) . '</a>';
-                  }
-                  if ( ! empty( $options ) )
-                    $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
-                }
-                
-                /* Theme path information */
-                if ( current_user_can( 'edit_themes' ) && $installed ) {
-                  if ( $parent_theme ) {
-                     $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
-                  } else {
-                     $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.', 'envato' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
-                  }
-                }
-                
-                /* Tags list */
-                if ( $tags ) {
-                  $content.= '<p>' . __( 'Tags: ' ). join( ', ', $tags ) . '</p>';
-                }
-                
-                /* Upgrade/Install message */
-                if ( $has_update ) {
-                  if ( ! current_user_can( 'update_themes' ) ) {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
-                  } else {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
-                  }
-                } else if ( ! $installed ) {
-                  if ( ! current_user_can( 'update_themes' ) ) {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version );
-                  } else {
-                    $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
-                  }
-                }
-                
-                /* put the HTML into a variable */
-                $list_item = '
-                <li>
-                  <div class="thumbnail">
-                    <img src="' . $item_details->thumbnail  . '" alt="' . $title . '" />
-                  </div>
-                  <div class="item-details">
-                    ' . $content . '
-                  </div>
-                </li>';
-                
-                $premium_themes[] = array(
-                  'current_theme' => ( $current_stylesheet == $stylesheet ? true : false ),
-                  'list_item' => $list_item
-                );
-  
+              /* Theme Description */
+              if ( $description ) {
+                $content.= '<p class="description">' . $description . '</p>';
               }
               
-            }
-          }
-          
-          /**
-           * Loop through all the premium themes.
-           * Separate out the current one, display it, & remove from array
-           * Display the other premium themes after edits to the array.
-           */
-          if ( ! empty( $premium_themes ) ) {
-            $current_theme = array();
-            foreach ( $premium_themes as $k => $v ) {
-              if ( $premium_themes[$k]['current_theme'] == true ) {
-                $current_theme = $premium_themes[$k];
-                unset( $premium_themes[$k] );
+              /* Theme Backup URI */
+              $theme_backup_uri = $this->_get_theme_backup_uri( $template );
+              
+              /* Links list */
+              if ( $stylesheet && $template && $current_stylesheet !== $stylesheet ) {
+                
+                $links[] = '<a href="' . $activate_url .  '" class="activatelink" title="' . esc_attr( sprintf( __( 'Activate &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Activate', 'envato-wordpress-toolkit' ) . '</a> |';
+                
+                $links[] = '<a href="' . network_admin_url( 'customize.php?theme=' . urlencode( $template ) ) . '&return=' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . urlencode( '&' ) . 'tab=themes" class="load-customize hide-if-no-customize" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a> <span class="hide-if-no-customize">|</span>';
+                
+                $links[] = '<a href="' . $preview_url . '" class="thickbox thickbox-preview hide-if-customize" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '">' . __( 'Preview', 'envato-wordpress-toolkit' ) . '</a> <span class="hide-if-customize">|</span>';
+                
+                $links[] = '<a href="' . $delete_url . '" class="submitdelete deletion" title="' . esc_attr( sprintf( __( 'Delete &#8220;%s&#8221;', 'envato-wordpress-toolkit' ), $title ) ) . '" ' . $delete_onclick . '>' . __( 'Delete' ) . '</a> |';
+                
+                $links[] = '<a href="' . $details_url . '" class="thickbox thickbox-preview" title="' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '">' . esc_attr( sprintf( __( 'View version %1$s details', 'envato-wordpress-toolkit' ), $latest_version ) ) . '</a> |';
+                
+                if ( ! empty( $theme_backup_uri ) ) {
+                  $links[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a> |';
+                }
+                
+                $content.= '<div class="update-info">' . rtrim( implode( ' ', $links ), ' |' ) . '</div>';
+                
               }
+              
+              /**
+               * This ugly code lists the current theme options
+               * It was pulled from wp-admin/themes.php with minor tweaks
+               */
+              if ( $current_stylesheet == $stylesheet ) {
+                global $self, $submenu;
+                $parent_file = 'themes.php';
+                $options = array();
+                if ( is_array( $submenu ) && isset( $submenu['themes.php'] ) ) {
+              		foreach ( (array) $submenu['themes.php'] as $item) {
+              			$class = '';
+              			if ( 'themes.php' == $item[2] || 'theme-editor.php' == $item[2] )
+              				continue;
+              			// 0 = name, 1 = capability, 2 = file
+              			if ( ( strcmp($self, $item[2]) == 0 && empty($parent_file)) || ($parent_file && ($item[2] == $parent_file)) )
+              				$class = ' class="current"';
+              			if ( !empty($submenu[$item[2]]) ) {
+              				$submenu[$item[2]] = array_values($submenu[$item[2]]); // Re-index.
+              				$menu_hook = get_plugin_page_hook($submenu[$item[2]][0][2], $item[2]);
+              				if ( file_exists(WP_PLUGIN_DIR . "/{$submenu[$item[2]][0][2]}") || !empty($menu_hook))
+              					$options[] = "<a href='admin.php?page={$submenu[$item[2]][0][2]}'$class>{$item[0]}</a>";
+              				else
+              					$options[] = "<a href='{$submenu[$item[2]][0][2]}'$class>{$item[0]}</a>";
+              			} else if ( current_user_can($item[1]) ) {
+              				$menu_file = $item[2];
+              				if ( false !== ( $pos = strpos( $menu_file, '?' ) ) )
+              					$menu_file = substr( $menu_file, 0, $pos );
+              				if ( file_exists( ABSPATH . "wp-admin/$menu_file" ) ) {
+              					$options[] = "<a href='{$item[2]}'$class>{$item[0]}</a>";
+              				} else {
+              					$options[] = "<a href='themes.php?page={$item[2]}'$class>{$item[0]}</a>";
+              				}
+              			}
+              		}
+              	}
+	
+                if ( ! empty( $theme_backup_uri ) ) {
+                  $options[] = '<a href="' . $theme_backup_uri . '" title="' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '">' . esc_attr( __( 'Download Backup', 'envato-wordpress-toolkit' ) ) . '</a>';
+                }
+                if ( ! empty( $options ) )
+                  $content.= '<div class="update-info"><span>' . __( 'Options:', 'envato-wordpress-toolkit' ) . '</span> ' . implode( ' | ', $options ) . '</div>';
+              }
+              
+              /* Theme path information */
+              if ( current_user_can( 'edit_themes' ) && $installed ) {
+                if ( $parent_theme ) {
+                   $content.= '<p>' . sprintf( __( 'The template files are located in <code>%2$s</code>. The stylesheet files are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from <strong>%5$s</strong>. Changes made to the templates will affect both themes.', 'envato-wordpress-toolkit' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ), $title, $parent_theme ) . '</p>';
+                } else {
+                   $content.= '<p>' . sprintf( __( 'All of this theme&#8217;s files are located in <code>%2$s</code>.', 'envato-wordpress-toolkit' ), $title, str_replace( WP_CONTENT_DIR, '', $template_dir ), str_replace( WP_CONTENT_DIR, '', $stylesheet_dir ) ) . '</p>';
+                }
+              }
+              
+              /* Tags list */
+              if ( $tags ) {
+                $content.= '<p>' . __( 'Tags: ' ). join( ', ', $tags ) . '</p>';
+              }
+              
+              /* Upgrade/Install message */
+              if ( $has_update ) {
+                if ( ! current_user_can( 'update_themes' ) ) {
+                  $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version );
+                } else {
+                  $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( 'There is a new version of %1$s available. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s" %5$s>update automatically</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version, $update_url, $update_onclick );
+                }
+              } else if ( ! $installed ) {
+                if ( ! current_user_can( 'update_themes' ) ) {
+                  $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version );
+                } else {
+                  $content.= sprintf( '<div class="updated below-h2"><p><strong>' . __( '%1$s has not been installed. <a href="%2$s" class="thickbox thickbox-preview" title="%1$s">View version %3$s details</a> or <a href="%4$s">install automatically</a>.', 'envato-wordpress-toolkit' ) . '</strong></p></div>', $title, $details_url, $latest_version, $install_url );
+                }
+              }
+              
+              /* put the HTML into a variable */
+              $list_item = '
+              <li>
+                <div class="thumbnail">
+                  <img src="' . $item_details->thumbnail  . '" alt="' . $title . '" />
+                </div>
+                <div class="item-details">
+                  ' . $content . '
+                </div>
+              </li>';
+              
+              $premium_themes[] = array(
+                'current_theme' => ( $current_stylesheet == $stylesheet ? true : false ),
+                'list_item' => $list_item
+              );
+
             }
             
-            /* list current premium theme */
-            if ( ! empty( $current_theme ) ) {
-              _e( '<h3>Current Theme</h3>' );
-              echo '<ul class="ewpu-item-list">';
-                echo $current_theme['list_item'];
-              echo '</ul>';
-            }
-            
-            /* list premium themes */
-            _e( '<h3>Available Themes</h3>' );
-            echo '<ul class="ewpu-item-list">';
-            foreach ( $premium_themes as $k => $v )
-              echo $premium_themes[$k]['list_item'];
-            echo '</ul>';
           }
-            
         }
+        
+        /**
+         * Loop through all the premium themes.
+         * Separate out the current one, display it, & remove from array
+         * Display the other premium themes after edits to the array.
+         */
+        if ( ! empty( $premium_themes ) ) {
+          $themes_output = '';
+          $current_theme = array();
+          foreach ( $premium_themes as $k => $v ) {
+            if ( $premium_themes[$k]['current_theme'] == true ) {
+              $current_theme = $premium_themes[$k];
+              unset( $premium_themes[$k] );
+            }
+          }
+          
+          /* list current premium theme */
+          if ( ! empty( $current_theme ) ) {
+            $themes_output.= __( '<h3>Current Theme</h3>' );
+            $themes_output.= '<ul class="ewpt-item-list">';
+              $themes_output.= $current_theme['list_item'];
+            $themes_output.= '</ul>';
+          }
+          
+          /* list premium themes */
+          $themes_output.= __( '<h3>Available Themes</h3>' );
+          $themes_output.= '<ul class="ewpt-item-list">';
+          foreach ( $premium_themes as $k => $v )
+            $themes_output.= $premium_themes[$k]['list_item'];
+          $themes_output.= '</ul>';
+        }
+          
+      }
+      
+      /* Get the current tab */
+      $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'settings';
+        
+      /* Display Markup */
+      echo '<div class="wrap">';
+        
+        echo '<h2 class="nav-tab-wrapper">';
+          
+          echo '<a class="nav-tab' . ( $tab == 'settings' ? ' nav-tab-active': '' ) . '" href="?page=envato-wordpress-toolkit&tab=settings">Settings</a>';
+          
+        if ( isset( $themes_output ) ) {
+          echo '<a class="nav-tab' . ( $tab == 'themes' ? ' nav-tab-active': '' ) . '" href="?page=envato-wordpress-toolkit&tab=themes">Themes</a>';
+        }
+        
+        echo '</h2>';
+        
+        if ( $tab == 'settings' || ! isset( $themes_output ) ) {
+          echo '
+          <form name="verification_form" method="post" action="' . admin_url( 'options.php' ) . '" id="api-verification">';
+            wp_nonce_field( 'update-options' );
+            settings_fields( EWPT_PLUGIN_SLUG );
+            do_settings_sections( EWPT_PLUGIN_SLUG );
+            echo '
+            <p class="submit">
+              <input type="submit" name="Submit" class="button-primary right" value="' . __( 'Save Settings', 'envato-wordpress-toolkit' ) . '" />
+            </p>
+          </form>';
+        }
+        
+        if ( $tab == 'themes' && isset( $themes_output ) ) {
+          
+          echo $themes_output;
+          
+        }
+        
       echo '</div>';   
     }
   }
@@ -596,11 +728,13 @@ class Envato_WP_Toolkit {
     $this->_admin_update_check();
     $this->_admin_init_before();
     register_setting( EWPT_PLUGIN_SLUG, EWPT_PLUGIN_SLUG );
-    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato' ), array( $this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato' ), array( $this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_field( 'api_key', __( 'Secret API Key', 'envato' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
-    add_settings_section( 'backup_info', __( 'Backup Information', 'envato' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
-    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
+    add_settings_section( 'user_account_info', __( 'User Account Information', 'envato-wordpress-toolkit' ), array( $this, '_section_user_account_info' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'user_name', __( 'Marketplace Username', 'envato-wordpress-toolkit' ), array( $this, '_field_user_name' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_field( 'api_key', __( 'Secret API Key', 'envato-wordpress-toolkit' ), array( $this, '_field_api_key' ), EWPT_PLUGIN_SLUG, 'user_account_info' );
+    add_settings_section( 'backup_info', __( 'Backup Information', 'envato-wordpress-toolkit' ), array( $this, '_section_backup_information' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato-wordpress-toolkit' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
+    add_settings_section( 'github_updater', __( 'Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
+    add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
   }
   
   /**
@@ -612,7 +746,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_user_account_info() {
-    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces. Once a valid connection has been made any changes to the API key below for this username will not effect the results for 5 minutes because they\'re cached in the database. If you have already made an API connection and just purchase a theme and it\'s not showing up, wait five minutes and refresh the page. If the theme is still not showing up, it\'s possible the author has not made it available for auto install yet.', 'envato' );
+    _e( 'To obtain your API Key, visit your "My Settings" page on any of the Envato Marketplaces. Once a valid connection has been made any changes to the API key below for this username will not effect the results for 5 minutes because they\'re cached in the database. If you have already made an API connection and just purchase a theme and it\'s not showing up, wait five minutes and refresh the page. If the theme is still not showing up, it\'s possible the author has not made it available for auto install yet.', 'envato-wordpress-toolkit' );
   }
   
   /**
@@ -650,7 +784,7 @@ class Envato_WP_Toolkit {
    * @return    string
    */
   public function _section_backup_information() {
-    _e( 'This plugin will automatically save your theme as a ZIP archive before it does an upgrade. The directory those backups get saved to is <code>wp-content/envato-backups</code>. However, if you\'re experiencing problems while attempting to upgrade, it\'s likely to be a permissions issue and you may want to manually backup your theme before upgrading. Alternatively, if you don\'t want to backup your theme you can check the box below.', 'envato' );
+    _e( 'This plugin will automatically save your theme as a ZIP archive before it does an upgrade. The directory those backups get saved to is <code>wp-content/envato-backups</code>. However, if you\'re experiencing problems while attempting to upgrade, it\'s likely to be a permissions issue and you may want to manually backup your theme before upgrading. Alternatively, if you don\'t want to backup your theme you can check the box below.', 'envato-wordpress-toolkit' );
   }
   
   /**
@@ -668,6 +802,32 @@ class Envato_WP_Toolkit {
   }
   
   /**
+   * Github Updater
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string
+   */
+  public function _section_github_updater() {
+    printf( __( 'This option lets you deactivate the %s class, so it does not load. If you want to update the plugin in the future, just uncheck this option and the plugin will look for a new version on Github; check it and it stops looking.', 'envato-wordpress-toolkit' ), '<code>WP_GitHub_Updater</code>' );
+  }
+  
+  /**
+   * Deactivate Github Updater
+   *
+   * @access    private
+   * @since     1.7.1
+   *
+   * @return    string
+   */
+  public function _field_deactivate_github_updater() {
+    $options = get_option( EWPT_PLUGIN_SLUG );
+    $field_value = isset( $options['deactivate_github_updater'] ) ? true : false;
+    echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_github_updater]" value="1" ' . checked( $field_value, 1, false ) . ' />';
+  }
+  
+  /**
    * Change the text on the install or upgrade screen
    *
    * @access    private
@@ -681,7 +841,7 @@ class Envato_WP_Toolkit {
       $action = $_GET['action'];
       if ( $page == EWPT_PLUGIN_SLUG ) {
         if ( 'install-theme' == $action || 'upgrade-theme' == $action ) {
-          $actions['themes_page'] = '<a href="' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato' ), EWPT_PLUGIN_NAME ) . '</a>';
+          $actions['themes_page'] = '<a href="' . network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG ) . '&tab=themes" title="' . esc_attr__( sprintf( __( 'Return to %s', 'envato-wordpress-toolkit' ), EWPT_PLUGIN_NAME ) ) . '" target="_parent">' . sprintf( __( 'Return to %s', 'envato-wordpress-toolkit' ), EWPT_PLUGIN_NAME ) . '</a>';
         }
       }
     }
@@ -706,7 +866,7 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'install-theme_' . $theme );
     
     if ( ! current_user_can( 'install_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to install themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to install themes for this site.', 'envato-wordpress-toolkit' ) );
     
     /* setup theme info in $api array */
     $api = (object) array();
@@ -718,7 +878,7 @@ class Envato_WP_Toolkit {
       }
     }
     
-    $title = sprintf( __( 'Installing Theme: %s', 'envato' ), $api->name . ' ' . $api->version );
+    $title = sprintf( __( 'Installing Theme: %s', 'envato-wordpress-toolkit' ), $api->name . ' ' . $api->version );
     $nonce = 'install-theme_' . $theme;
     $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=install-theme&theme=' . $theme );
     $type = 'web';
@@ -747,13 +907,13 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'switch-theme_' . $template );
     
     if ( ! current_user_can( 'switch_themes' ) && ! current_user_can( 'edit_theme_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! function_exists( 'switch_theme' ) )
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
       
     switch_theme( $template, $stylesheet );
-    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&activated=true' ) );
+    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&activated=true&tab=themes' ) );
     exit;
   }
   
@@ -774,11 +934,11 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'upgrade-theme_' . $theme );
     
     if ( ! current_user_can( 'update_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
-    $title = __( 'Update Theme', 'envato' );
+    $title = __( 'Update Theme', 'envato-wordpress-toolkit' );
     $nonce = 'upgrade-theme_' . $theme;
-    $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&theme=' . $theme . '&item_id=' . $item_id );
+    $url = network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=upgrade-theme&tab=themes&theme=' . $theme . '&item_id=' . $item_id );
     
     /* trick WP into thinking it's the themes page for the icon32 */
     $current_screen->parent_base = 'themes';
@@ -807,16 +967,16 @@ class Envato_WP_Toolkit {
     check_admin_referer( 'delete-theme_' . $template );
 
     if ( ! current_user_can( 'switch_themes' ) && ! current_user_can( 'edit_theme_options' ) )
-      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to update themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! current_user_can( 'delete_themes' ) )
-      wp_die( __( 'You do not have sufficient permissions to delete themes for this site.', 'envato' ) );
+      wp_die( __( 'You do not have sufficient permissions to delete themes for this site.', 'envato-wordpress-toolkit' ) );
     
     if ( ! function_exists( 'delete_theme' ) )
       include_once( ABSPATH . 'wp-admin/includes/theme.php' );
     
     delete_theme( $template, wp_nonce_url( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&action=delete&template=' . $template ), 'delete-theme_' . $template ) );
-    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&deleted=true' ) );
+    wp_redirect( network_admin_url( 'admin.php?page=' . EWPT_PLUGIN_SLUG . '&deleted=true&tab=themes' ) );
     exit;
   }
 
@@ -882,7 +1042,7 @@ class Envato_WP_Toolkit {
     /* Secure the directory with a .htaccess file */
     $htaccess = $path . '.htaccess';
     
-    $contents[]  = '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato' );
+    $contents[]  = '# ' . __( 'This .htaccess file ensures that other people cannot download your backup files.', 'envato-wordpress-toolkit' );
     $contents[] = '';
     $contents[] = '<IfModule mod_rewrite.c>';
     $contents[] = 'RewriteEngine On';
@@ -964,21 +1124,22 @@ class Envato_WP_Toolkit {
    *
    * @access    private
    * @since     1.0
+   * @updated   1.7.1
    */
-  public function _http_request_args( $r ){
-    if ( (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
+  public function _http_request_args( $r ) {
+    if ( isset( $_GET['page'] ) && $_GET['page'] == EWPT_PLUGIN_SLUG && (int) ini_get( 'max_execution_time' ) <  EWPT_PLUGIN_MAX_EXECUTION_TIME ) {
       try {
         $this->_set_max_execution_time( EWPT_PLUGIN_MAX_EXECUTION_TIME );
       } catch ( Exception $e ) {
         $options = get_option( EWPT_PLUGIN_SLUG );
-        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a id="dismiss-ajax-notification" href="javascript:;">Dismiss this.</a>', $e->getMessage() );
+        $env_error = sprintf( '<p id="max_execution_time"><strong>Environment error:</strong> %s <a href="#" id="dismiss-ajax-notification">Dismiss this.</a>', $e->getMessage() );
         $env_error .= '<span id="ajax-notification-nonce" class="hidden">' . $this->ajax_notification_nonce . '</span></p>';
         $options['env_errors']['max_execution_time'] = $env_error;
         update_option( EWPT_PLUGIN_SLUG, $options );
       }
+      $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
     }
-
-    $r['timeout'] = EWPT_PLUGIN_MAX_EXECUTION_TIME;
+    
     return $r;
   }
 
@@ -1024,7 +1185,7 @@ class Envato_WP_Toolkit {
     } // end if
 
   }
-
+  
 }
 
 /**

@@ -1,9 +1,9 @@
 === Envato WordPress Toolkit ===
-Contributors: envato, valendesigns, japh
+Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.6
-Tested up to: 3.9.1
-Stable tag: 1.7.0
+Tested up to: 4.0.1
+Stable tag: 1.7.1
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -32,6 +32,17 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
+= 1.7.1 =
+* Fixed: Stop Mojo Marketplace from tracking your movements and causing long or hanging page loads.
+* Fixed: Fix an issue that caused the timeout to be set high globally.
+* Added: Ability to deactivate the Github Updater.
+* Fixed: Stopped `wp_list_themes` from making an API request before credentials have been entered into WordPress.
+* Fixed: Changed the menu position and load priority to stop Mojo Marketplace from hiding the Envato Toolkit menu item.
+* Fixed: Switched from `.png` to a font icon, which makes it Admin Color Scheme compatible.
+* Added: New i18n file and changed the domain from `envato` to `envato-wordpress-toolkit` to avoid potential conflicts.
+* Fixed: Changed the UI so it now has tabs for better content separation.
+* Fixed: Now uses the Customizer to preview installed themes.
+
 = 1.7.0 =
 * Fixed: Converted transient names into hashes to comply with character limits.
 * Fixed: Invalid argument supplied foreach warning.
@@ -46,8 +57,8 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 * Fixed: Conflict with other plugins using the GitHub updater.
 
 = 1.6.1 =
-* set_time_limit errors are now hidden in favour of a more user-friendly message.
-* Make error notices dismissable.
+* set_time_limit errors are now hidden in favor of a more user-friendly message.
+* Make error notices dismissible.
 
 = 1.6 =
 * Fixed: Bug that prevented updating if backups were enabled.

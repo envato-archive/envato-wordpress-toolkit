@@ -1,0 +1,279 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Envato WordPress Toolkit\n"
+"POT-Creation-Date: 2014-11-21 13:58-0800\n"
+"PO-Revision-Date: 2014-11-21 13:58-0800\n"
+"Last-Translator: Derek Herman <derek@valendesigns.com>\n"
+"Language-Team: Envato\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../index.php:68
+msgid "Envato WordPress Toolkit"
+msgstr ""
+
+#: ../index.php:228
+msgid "Envato Toolkit"
+msgstr ""
+
+#: ../index.php:329
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: ../index.php:361
+msgid "User Settings Updated."
+msgstr ""
+
+#: ../index.php:362
+msgid "Theme Activated."
+msgstr ""
+
+#: ../index.php:363
+msgid "Theme Deleted."
+msgstr ""
+
+#: ../index.php:439
+#, php-format
+msgid ""
+"You're about to delete the '%s' theme. 'Cancel' to stop, 'OK' to update."
+msgstr ""
+
+#: ../index.php:442
+msgid ""
+"Updating this theme will lose any customizations you have made. 'Cancel' to "
+"stop, 'OK' to update."
+msgstr ""
+
+#: ../index.php:458
+#, php-format
+msgid "Activate &#8220;%s&#8221;"
+msgstr ""
+
+#: ../index.php:458
+msgid "Activate"
+msgstr ""
+
+#: ../index.php:460 ../index.php:462
+#, php-format
+msgid "Preview &#8220;%s&#8221;"
+msgstr ""
+
+#: ../index.php:460 ../index.php:462
+msgid "Preview"
+msgstr ""
+
+#: ../index.php:464
+#, php-format
+msgid "Delete &#8220;%s&#8221;"
+msgstr ""
+
+#: ../index.php:464
+msgid "Delete"
+msgstr ""
+
+#: ../index.php:466
+#, php-format
+msgid "View version %1$s details"
+msgstr ""
+
+#: ../index.php:469 ../index.php:513
+msgid "Download Backup"
+msgstr ""
+
+#: ../index.php:516
+msgid "Options:"
+msgstr ""
+
+#: ../index.php:522
+#, php-format
+msgid ""
+"The template files are located in <code>%2$s</code>. The stylesheet files "
+"are located in <code>%3$s</code>. <strong>%4$s</strong> uses templates from "
+"<strong>%5$s</strong>. Changes made to the templates will affect both themes."
+msgstr ""
+
+#: ../index.php:524
+#, php-format
+msgid "All of this theme&#8217;s files are located in <code>%2$s</code>."
+msgstr ""
+
+#: ../index.php:530
+msgid "Tags: "
+msgstr ""
+
+#: ../index.php:536
+#, php-format
+msgid ""
+"There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox "
+"thickbox-preview\" title=\"%1$s\">View version %3$s details</a>."
+msgstr ""
+
+#: ../index.php:538
+#, php-format
+msgid ""
+"There is a new version of %1$s available. <a href=\"%2$s\" class=\"thickbox "
+"thickbox-preview\" title=\"%1$s\">View version %3$s details</a> or <a href="
+"\"%4$s\" %5$s>update automatically</a>."
+msgstr ""
+
+#: ../index.php:542
+#, php-format
+msgid ""
+"%1$s has not been installed. <a href=\"%2$s\" class=\"thickbox thickbox-"
+"preview\" title=\"%1$s\">View version %3$s details</a>."
+msgstr ""
+
+#: ../index.php:544
+#, php-format
+msgid ""
+"%1$s has not been installed. <a href=\"%2$s\" class=\"thickbox thickbox-"
+"preview\" title=\"%1$s\">View version %3$s details</a> or <a href=\"%4$s"
+"\">install automatically</a>."
+msgstr ""
+
+#: ../index.php:586
+msgid "<h3>Current Theme</h3>"
+msgstr ""
+
+#: ../index.php:593
+msgid "<h3>Available Themes</h3>"
+msgstr ""
+
+#: ../index.php:626
+msgid "Save Settings"
+msgstr ""
+
+#: ../index.php:731
+msgid "User Account Information"
+msgstr ""
+
+#: ../index.php:732
+msgid "Marketplace Username"
+msgstr ""
+
+#: ../index.php:733
+msgid "Secret API Key"
+msgstr ""
+
+#: ../index.php:734
+msgid "Backup Information"
+msgstr ""
+
+#: ../index.php:735
+msgid "Skip Theme Backup"
+msgstr ""
+
+#: ../index.php:736
+msgid "Github Updater"
+msgstr ""
+
+#: ../index.php:737
+msgid "Deactivate Github Updater"
+msgstr ""
+
+#: ../index.php:749
+msgid ""
+"To obtain your API Key, visit your \"My Settings\" page on any of the Envato "
+"Marketplaces. Once a valid connection has been made any changes to the API "
+"key below for this username will not effect the results for 5 minutes "
+"because they're cached in the database. If you have already made an API "
+"connection and just purchase a theme and it's not showing up, wait five "
+"minutes and refresh the page. If the theme is still not showing up, it's "
+"possible the author has not made it available for auto install yet."
+msgstr ""
+
+#: ../index.php:787
+msgid ""
+"This plugin will automatically save your theme as a ZIP archive before it "
+"does an upgrade. The directory those backups get saved to is <code>wp-"
+"content/envato-backups</code>. However, if you're experiencing problems "
+"while attempting to upgrade, it's likely to be a permissions issue and you "
+"may want to manually backup your theme before upgrading. Alternatively, if "
+"you don't want to backup your theme you can check the box below."
+msgstr ""
+
+#: ../index.php:813
+#, php-format
+msgid ""
+"This option lets you deactivate the %s class, so it does not load. If you "
+"want to update the plugin in the future, just uncheck this option and the "
+"plugin will look for a new version on Github; check it and it stops looking."
+msgstr ""
+
+#: ../index.php:844
+#, php-format
+msgid "Return to %s"
+msgstr ""
+
+#: ../index.php:869
+msgid "You do not have sufficient permissions to install themes for this site."
+msgstr ""
+
+#: ../index.php:881
+#, php-format
+msgid "Installing Theme: %s"
+msgstr ""
+
+#: ../index.php:910 ../index.php:937 ../index.php:970
+msgid "You do not have sufficient permissions to update themes for this site."
+msgstr ""
+
+#: ../index.php:939
+msgid "Update Theme"
+msgstr ""
+
+#: ../index.php:973
+msgid "You do not have sufficient permissions to delete themes for this site."
+msgstr ""
+
+#: ../index.php:1045
+msgid ""
+"This .htaccess file ensures that other people cannot download your backup "
+"files."
+msgstr ""
+
+#: ../includes/class-envato-api.php:67 ../includes/class-envato-api.php:104
+#: ../includes/class-envato-api.php:158
+msgid "Please enter your Envato Marketplace Username."
+msgstr ""
+
+#: ../includes/class-envato-api.php:71
+msgid "Please enter your Envato Marketplace API Key."
+msgstr ""
+
+#: ../includes/class-envato-api.php:96
+msgid "The API \"set\" is a required parameter."
+msgstr ""
+
+#: ../includes/class-envato-api.php:185
+msgid "The Envato Marketplace \"item ID\" is a required parameter."
+msgstr ""
+
+#: ../includes/class-envato-backup.php:392
+msgid "The backup file was not created"
+msgstr ""
+
+#: ../includes/class-envato-backup.php:461
+msgid "The following files are unreadable and could not be backed up: "
+msgstr ""
+
+#: ../includes/class-wp-upgrader.php:22
+msgid "Downloading upgrade package from the Envato API&#8230;"
+msgstr ""
+
+#: ../includes/class-wp-upgrader.php:26
+msgid "Backing up & removing the old version of the theme&#8230;"
+msgstr ""
+
+#: ../includes/class-wp-upgrader.php:32
+msgid "Downloading install package from the Envato API&#8230;"
+msgstr ""
