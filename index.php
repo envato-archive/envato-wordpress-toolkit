@@ -689,37 +689,36 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
      * @return    void
      */
     protected function _admin_init_before() {
-  
-      if ( isset( $_GET['page'] ) ) {
-        $page = $_GET['page'];
-        
-        /* only execute if this is the Envato WordPress Toolkit */
-        if ( $page == EWPT_PLUGIN_SLUG ) {
-          
-          $this->_prepare_envato_backup();
-          
-          /* adds thickbox for previews */
-          add_thickbox();
-          
-          /* action must be set and template or stylesheet */
-          if ( isset( $_GET['action'] ) && ( isset( $_GET['template'] ) || isset( $_GET['stylesheet'] ) ) ) {
-          
-            /* get request variables */
-            $action = $_GET['action'];
-            $template = isset( $_GET['template'] ) ? $_GET['template'] : '';
-            $stylesheet = isset( $_GET['stylesheet'] ) ? $_GET['stylesheet'] : '';
-          
-            /* required to use the switch_theme() & delete_theme() functions */
-            include_once( ABSPATH . 'wp-admin/includes/theme.php' );
-            
-            if ( 'activate' == $action ) {
-              $this->_activate_theme( $template, $stylesheet );
-            } else if ( 'delete' == $action ) {
-              $this->_delete_theme( $template );
-            }
+
+      /* only execute if this is the Envato WordPress Toolkit */
+      if ( isset( $_GET['page'] ) && $_GET['page'] == EWPT_PLUGIN_SLUG ) {
+
+        $this->_prepare_envato_backup();
+
+        /* adds thickbox for previews */
+        add_thickbox();
+
+        /* action must be set and template or stylesheet */
+        if ( isset( $_GET['action'] ) && ( isset( $_GET['template'] ) || isset( $_GET['stylesheet'] ) ) ) {
+
+          /* get request variables */
+          $action = $_GET['action'];
+          $template = isset( $_GET['template'] ) ? $_GET['template'] : '';
+          $stylesheet = isset( $_GET['stylesheet'] ) ? $_GET['stylesheet'] : '';
+
+          /* required to use the switch_theme() & delete_theme() functions */
+          include_once( ABSPATH . 'wp-admin/includes/theme.php' );
+
+          if ( 'activate' == $action ) {
+            $this->_activate_theme( $template, $stylesheet );
+          } else if ( 'delete' == $action ) {
+            $this->_delete_theme( $template );
           }
+
         }
-      } 
+
+      }
+
     }
     
     /**

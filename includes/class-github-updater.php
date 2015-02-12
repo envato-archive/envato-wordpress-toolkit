@@ -390,8 +390,13 @@ class WP_GitHub_Updater {
    */
   public function get_plugin_info( $false, $action, $response ) {
 
+    // Include plugin updates for `list_plugin_updates()`
+    if ( $action == 'plugin_information' && isset( $response->slug ) && $response->slug == dirname( $this->config['slug'] ) ) {
+      $found_it = true;
+    }
+    
     // Check if this call API is for the right plugin
-    if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] )
+    if ( ! isset( $found_it ) && ( ! isset( $response->slug ) || $response->slug != $this->config['slug'] ) )
       return $false;
 
     $response->slug = $this->config['slug'];
