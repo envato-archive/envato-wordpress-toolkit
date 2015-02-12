@@ -308,9 +308,12 @@ if ( ! class_exists( 'Envato_Backup' ) ) {
       $this->errors_to_warnings( $this->archive_method );
       $this->archive_method = 'ziparchive';
       
+      if ( ! class_exists( 'ZipArchive' ) )
+        return;
+
       $zip = new ZipArchive();
       
-      if ( ! class_exists( 'ZipArchive' ) || ! $zip->open( $this->archive_filepath(), ZIPARCHIVE::CREATE ) )
+      if ( ! $zip->open( $this->archive_filepath(), ZIPARCHIVE::CREATE ) )
         return;
       
       $files_added = 0;
