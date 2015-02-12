@@ -32,6 +32,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
+= 1.7.2 =
+* Added checks to stop PHP from throwing redeclare class errors.
+
 = 1.7.1 =
 * Fixed: Stop Mojo Marketplace from tracking your movements and causing long or hanging page loads.
 * Fixed: Fix an issue that caused the timeout to be set high globally.
