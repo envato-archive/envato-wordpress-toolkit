@@ -1,41 +1,20 @@
 <?php
 // Prevent loading this file directly and/or if the class is already defined
-if ( ! defined( 'ABSPATH' ) || class_exists( 'WPGitHubUpdater' ) || class_exists( 'WP_GitHub_Updater' ) )
+if ( ! defined( 'ABSPATH' ) || class_exists( 'WP_GitHub_Updater' ) )
   return;
 
 /**
- * This is a derivitive work and has been modified.
+ * Updates the Envato WordPress Toolkit via Guthub.
  *
- * @version 1.6
- * @author Joachim Kudish <info@jkudish.com>
- * @link http://jkudish.com
- * @package WP_GitHub_Updater
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @copyright Copyright (c) 2011-2013, Joachim Kudish
- *
- * GNU General Public License, Free Software Foundation
- * <http://creativecommons.org/licenses/GPL/2.0/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This is a derivitive work of Joachim Kudish's `WP_GitHub_Updater`. 
+ * It has been heavily modified to work with this plugin specifically.
  */
 class WP_GitHub_Updater {
 
   /**
    * GitHub Updater version
    */
-  const VERSION = 1.6;
+  const VERSION = EWPT_PLUGIN_VER;
 
   /**
    * @var $config the config for the updater
@@ -55,7 +34,6 @@ class WP_GitHub_Updater {
    */
   private $github_data;
 
-
   /**
    * Class Constructor
    *
@@ -68,6 +46,7 @@ class WP_GitHub_Updater {
 
     $defaults = array(
       'slug' => plugin_basename( __FILE__ ),
+      'plugin' => plugin_basename( __FILE__ ),
       'proper_folder_name' => dirname( plugin_basename( __FILE__ ) ),
       'sslverify' => true,
       'access_token' => '',
@@ -82,9 +61,7 @@ class WP_GitHub_Updater {
       _doing_it_wrong( __CLASS__, $message , self::VERSION );
       return;
     }
-    
-    $this->config['transient_base'] = substr( md5( $this->config['slug'] ), 0, 16 );
-    
+
     $this->set_defaults();
 
     add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'api_check' ) );
@@ -108,10 +85,7 @@ class WP_GitHub_Updater {
       'api_url',
       'raw_url',
       'github_url',
-      'zip_url',
-      'requires',
-      'tested',
-      'readme',
+      'zip_url'
     );
 
     foreach ( $required_config_params as $required_param ) {
@@ -140,7 +114,7 @@ class WP_GitHub_Updater {
    * @return void
    */
   public function set_defaults() {
-    if ( !empty( $this->config['access_token'] ) ) {
+    if ( ! empty( $this->config['access_token'] ) ) {
 
       // See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
       extract( parse_url( $this->config['zip_url'] ) ); // $scheme, $host, $path
@@ -151,16 +125,28 @@ class WP_GitHub_Updater {
       $this->config['zip_url'] = $zip_url;
     }
 
+    if ( ! isset( $this->config['readme'] ) )
+      $this->config['readme'] = 'readme.txt';
+      
+    // Get the contents of the readme.txt file
+    $this->readme = $this->get_readme();
+
     if ( ! isset( $this->config['new_version'] ) )
-      $this->config['new_version'] = $this->get_new_version();
+      $this->config['new_version'] = $this->get_readme_header_info( 'Stable tag' );
+
+    if ( ! isset( $this->config['tested'] ) )
+      $this->config['tested'] = $this->get_readme_header_info( 'Tested up to' );
+
+    if ( ! isset( $this->config['requires'] ) )
+      $this->config['requires'] = $this->get_readme_header_info( 'Requires at least' );
 
     if ( ! isset( $this->config['last_updated'] ) )
       $this->config['last_updated'] = $this->get_date();
-
-    if ( ! isset( $this->config['description'] ) )
-      $this->config['description'] = $this->get_description();
-
+    
     $plugin_data = $this->get_plugin_data();
+    if ( ! isset( $this->config['description'] ) )
+      $this->config['description'] = $plugin_data['Description'];
+
     if ( ! isset( $this->config['plugin_name'] ) )
       $this->config['plugin_name'] = $plugin_data['Name'];
 
@@ -172,12 +158,7 @@ class WP_GitHub_Updater {
 
     if ( ! isset( $this->config['homepage'] ) )
       $this->config['homepage'] = $plugin_data['PluginURI'];
-
-    if ( ! isset( $this->config['readme'] ) )
-      $this->config['readme'] = 'README.md';
-      
   }
-
 
   /**
    * Callback fn for the http_request_timeout filter
@@ -204,58 +185,47 @@ class WP_GitHub_Updater {
     return $args;
   }
 
-
   /**
-   * Get New Version from github
+   * Get readme.txt from github
    *
-   * @since 1.0
-   * @return int $version the version number
+   * @since 1.7.2
+   * @return int $readme The readme.txt contents
    */
-  public function get_new_version() {
-    $version = get_site_transient( $this->config['transient_base'].'_new_version' );
+  public function get_readme() {
+    $readme = get_site_transient( 'ewt_readme' );
 
-    if ( $this->overrule_transients() || ( !isset( $version ) || !$version || '' == $version ) ) {
+    if ( $this->overrule_transients() || ( ! isset( $readme ) || ! $readme || '' == $readme ) ) {
 
       $raw_url = trailingslashit( $this->config['raw_url'] ) . $this->config['readme'];
-      $raw_url = trailingslashit( $this->config['raw_url'] ) . basename( $this->config['slug'] );
       $raw_response = $this->remote_get( $raw_url );
 
       if ( is_wp_error( $raw_response ) )
-        $version = false;
+        return false;
 
-      if (is_array($raw_response)) {
-        if (!empty($raw_response['body'])) {
-          preg_match( '#Version\:\s*(.*)$#im', $raw_response['body'], $matches );
-        }
+      if ( is_array( $raw_response ) && ! empty( $raw_response['body'] ) ) {
+        set_site_transient( 'ewt_readme', $raw_response['body'], 3600 );
       }
-
-      if ( empty( $matches[1] ) )
-        $version = false;
-      else
-        $version = $matches[1];
-
-      // back compat for older readme version handling
-      $raw_response = $this->remote_get( trailingslashit( $this->config['raw_url'] ) . $this->config['readme'] );
-
-      if ( is_wp_error( $raw_response ) )
-        return $version;
-
-      preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
-
-      if ( isset( $__version[1] ) ) {
-        $version_readme = $__version[1];
-        if ( -1 == version_compare( $version, $version_readme ) )
-          $version = $version_readme;
-      }
-
-      // refresh every 6 hours
-      if ( false !== $version )
-        set_site_transient( $this->config['transient_base'].'_new_version', $version, 60*60*6 );
+  
     }
 
-    return $version;
+    return $readme;
   }
 
+  /**
+   * Get readme header info
+   *
+   * @since 1.7.2
+   * @return mixed
+   */
+  public function get_readme_header_info( $search = '' ) {
+    if ( '' != $search && '' != $this->readme ) {
+      preg_match( '#' . $search . '\:\s*(.*)$#im', $this->readme, $matches );
+      if ( ! empty( $matches[1] ) ) {
+        return $matches[1];
+      }  
+    }
+    return false;
+  }
 
   /**
    * Interact with GitHub
@@ -276,7 +246,6 @@ class WP_GitHub_Updater {
     return $raw_response;
   }
 
-
   /**
    * Get GitHub Data from the specified repository
    *
@@ -287,7 +256,7 @@ class WP_GitHub_Updater {
     if ( isset( $this->github_data ) && ! empty( $this->github_data ) ) {
       $github_data = $this->github_data;
     } else {
-      $github_data = get_site_transient( $this->config['transient_base'].'_github_data' );
+      $github_data = get_site_transient( 'ewt_github_data' );
 
       if ( $this->overrule_transients() || ( ! isset( $github_data ) || ! $github_data || '' == $github_data ) ) {
         $github_data = $this->remote_get( $this->config['api_url'] );
@@ -297,8 +266,8 @@ class WP_GitHub_Updater {
 
         $github_data = json_decode( $github_data['body'] );
 
-        // refresh every 6 hours
-        set_site_transient( $this->config['transient_base'].'_github_data', $github_data, 60*60*6 );
+        // refresh every hour
+        set_site_transient( 'ewt_github_data', $github_data, 3600 );
       }
 
       // Store the data in this class instance for future calls
@@ -307,7 +276,6 @@ class WP_GitHub_Updater {
 
     return $github_data;
   }
-
 
   /**
    * Get update date
@@ -320,19 +288,6 @@ class WP_GitHub_Updater {
     return ( !empty( $_date->updated_at ) ) ? date( 'Y-m-d', strtotime( $_date->updated_at ) ) : false;
   }
 
-
-  /**
-   * Get plugin description
-   *
-   * @since 1.0
-   * @return string $description the description
-   */
-  public function get_description() {
-    $_description = $this->get_github_data();
-    return ( !empty( $_description->description ) ) ? $_description->description : false;
-  }
-
-
   /**
    * Get Plugin data
    *
@@ -341,10 +296,9 @@ class WP_GitHub_Updater {
    */
   public function get_plugin_data() {
     include_once ABSPATH.'/wp-admin/includes/plugin.php';
-    $data = get_plugin_data( WP_PLUGIN_DIR.'/'.$this->config['slug'] );
+    $data = get_plugin_data( WP_PLUGIN_DIR . '/' . $this->config['slug'] );
     return $data;
   }
-
 
   /**
    * Hook into the plugin update check and connect to github
@@ -367,6 +321,7 @@ class WP_GitHub_Updater {
       $response = new stdClass;
       $response->new_version = $this->config['new_version'];
       $response->slug = $this->config['proper_folder_name'];
+      $response->plugin = $this->config['plugin'];
       $response->url = add_query_arg( array( 'access_token' => $this->config['access_token'] ), $this->config['github_url'] );
       $response->package = $this->config['zip_url'];
 
@@ -377,7 +332,6 @@ class WP_GitHub_Updater {
 
     return $transient;
   }
-
 
   /**
    * Get Plugin info
@@ -390,18 +344,24 @@ class WP_GitHub_Updater {
    */
   public function get_plugin_info( $false, $action, $response ) {
 
+    // Include plugin updates for `list_plugin_updates()`
+    if ( $action == 'plugin_information' && isset( $response->slug ) && $response->slug == dirname( $this->config['slug'] ) ) {
+      $found_it = true;
+    }
+    
     // Check if this call API is for the right plugin
-    if ( !isset( $response->slug ) || $response->slug != $this->config['slug'] )
+    if ( ! isset( $found_it ) && ( ! isset( $response->slug ) || $response->slug != $this->config['slug'] ) )
       return $false;
 
     $response->slug = $this->config['slug'];
-    $response->plugin_name  = $this->config['plugin_name'];
+    $response->plugin = $this->config['plugin'];
+    $response->plugin_name = $this->config['plugin_name'];
     $response->version = $this->config['new_version'];
     $response->author = $this->config['author'];
     $response->homepage = $this->config['homepage'];
     $response->requires = $this->config['requires'];
     $response->tested = $this->config['tested'];
-    $response->downloaded   = 0;
+    $response->downloaded = 0;
     $response->last_updated = $this->config['last_updated'];
     $response->sections = array( 'description' => $this->config['description'] );
     $response->download_link = $this->config['zip_url'];

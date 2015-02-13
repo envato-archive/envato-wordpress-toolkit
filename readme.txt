@@ -2,8 +2,8 @@
 Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.6
-Tested up to: 4.0.1
-Stable tag: 1.7.1
+Tested up to: 4.1
+Stable tag: 1.7.2
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -31,6 +31,13 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.7.2 =
+* Added checks to stop PHP from throwing redeclare class errors.
+* Fix an issue where the `ZipArchive` class was called before the `class_exists` check.
+* Fixed the Github Updater class so it now shows updates on `update-core.php`.
+* Changed the Github Updater class to pull in the contents of `readme.txt` to build the config array.
+* Changed the `raw_url` in `_admin_update_check` to use `raw.githubusercontent`, because `raw.github` causes a second `http` request.
 
 = 1.7.1 =
 * Fixed: Stop Mojo Marketplace from tracking your movements and causing long or hanging page loads.
