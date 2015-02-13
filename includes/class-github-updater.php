@@ -266,8 +266,8 @@ class WP_GitHub_Updater {
 
         $github_data = json_decode( $github_data['body'] );
 
-        // refresh every 6 hours
-        set_site_transient( 'ewt_github_data', $github_data, 60*60*6 );
+        // refresh every hour
+        set_site_transient( 'ewt_github_data', $github_data, 3600 );
       }
 
       // Store the data in this class instance for future calls
