@@ -35,7 +35,9 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 = 1.7.2 =
 * Added checks to stop PHP from throwing redeclare class errors.
 * Fix an issue where the `ZipArchive` class was called before the `class_exists` check.
-* Fixed Github Updater class so it now shows updates on `update-core.php`.
+* Fixed the Github Updater class so it now shows updates on `update-core.php`.
+* Changed the Github Updater class to pull in the contents of `readme.txt` to build the config array.
+* Changed the `raw_url` in `_admin_update_check` to use `raw.githubusercontent`, because `raw.github` causes a second `http` request.
 
 = 1.7.1 =
 * Fixed: Stop Mojo Marketplace from tracking your movements and causing long or hanging page loads.

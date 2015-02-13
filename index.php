@@ -659,17 +659,15 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
         if ( is_admin() ) { // note the use of is_admin() to double check that this is happening in the admin
   
           $config = array(
-            'slug' => plugin_basename( __FILE__ ),
-            'proper_folder_name' => EWPT_PLUGIN_SLUG,
-            'api_url' => 'https://api.github.com/repos/envato/' . EWPT_PLUGIN_SLUG,
-            'raw_url' => 'https://raw.github.com/envato/' . EWPT_PLUGIN_SLUG . '/master',
-            'github_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG,
-            'zip_url' => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG . '/archive/master.zip',
-            'sslverify' => true,
-            'requires' => '3.6',
-            'tested' => '4.1',
-            'readme' => 'readme.txt',
-            'access_token' => '',
+            'slug'                => plugin_basename( __FILE__ ),
+            'plugin'              => plugin_basename( __FILE__ ),
+            'proper_folder_name'  => EWPT_PLUGIN_SLUG,
+            'api_url'             => 'https://api.github.com/repos/envato/' . EWPT_PLUGIN_SLUG,
+            'raw_url'             => 'https://raw.githubusercontent.com/envato/' . EWPT_PLUGIN_SLUG . '/master',
+            'github_url'          => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG,
+            'zip_url'             => 'https://github.com/envato/' . EWPT_PLUGIN_SLUG . '/archive/master.zip',
+            'sslverify'           => true,
+            'access_token'        => ''
           );
   
           new WP_GitHub_Updater( $config );
