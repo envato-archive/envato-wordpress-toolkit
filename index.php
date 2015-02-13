@@ -185,18 +185,18 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
     }
     
     /**
-       * Loads the text domain.
-       *
-       * @return    void
-       *
-       * @access    private
-       * @since     1.7.1
-       */
-      public function _load_textdomain() {
-  
-        load_plugin_textdomain( 'envato-wordpress-toolkit', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-        
-      }
+     * Loads the text domain.
+     *
+     * @return    void
+     *
+     * @access    private
+     * @since     1.7.1
+     */
+    public function _load_textdomain() {
+
+      load_plugin_textdomain( 'envato-wordpress-toolkit', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+      
+    }
       
     /**
      * Create a nonce for AJAX notifications
