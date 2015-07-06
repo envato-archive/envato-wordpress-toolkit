@@ -360,9 +360,10 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
       }
       
       $args = array(
-        'headers'   => array( 'Accept-Encoding' => '' ), 
-        'sslverify' => false,
-        'timeout'   => 300
+        'headers'    => array( 'Accept-Encoding' => '' ), 
+        'sslverify'  => false,
+        'timeout'    => 300,
+        'user-agent' => 'Toolkit/1.7.3',
       );
       $request = wp_remote_request( $url, $args );
   
