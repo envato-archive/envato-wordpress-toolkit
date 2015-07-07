@@ -361,7 +361,7 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
 
       $args = array(
         'headers'    => array( 'Accept-Encoding' => '' ), 
-        'timeout'    => 300,
+        'timeout'    => 30,
         'user-agent' => 'Toolkit/1.7.3',
       );
 
@@ -370,7 +370,7 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
         $args['sslverify'] = false;
       }
 
-      $request = wp_remote_request( $url, $args );
+      $request = wp_safe_remote_request( $url, $args );
   
       if ( is_wp_error( $request ) ) {
       	echo $request->get_error_message();

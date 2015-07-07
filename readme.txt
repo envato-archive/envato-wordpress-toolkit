@@ -36,6 +36,8 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 * Added a custom user agent to all API requests so a connection is once again possible.
 * Added the option to turn sslverify on and off.
 * Envato API requests are now using HTTPS endpoints.
+* Replace `wp_remote_request` with `wp_safe_remote_request`, which will validated the API url.
+* Lowered the API request timeout to something more reasonable.
 
 = 1.7.2 =
 * Added checks to stop PHP from throwing redeclare class errors.
