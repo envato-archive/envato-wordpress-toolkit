@@ -738,6 +738,8 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato-wordpress-toolkit' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
       add_settings_section( 'github_updater', __( 'Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
       add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
+      add_settings_section( 'sslverify', __( 'SSL Verify', 'envato-wordpress-toolkit' ), array( $this, '_section_sslverify' ), EWPT_PLUGIN_SLUG );
+      add_settings_field( 'deactivate_sslverify', __( 'Deactivate SSL Verify', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_sslverify' ), EWPT_PLUGIN_SLUG, 'sslverify' );
     }
     
     /**
@@ -829,7 +831,33 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       $field_value = isset( $options['deactivate_github_updater'] ) ? true : false;
       echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_github_updater]" value="1" ' . checked( $field_value, 1, false ) . ' />';
     }
-    
+
+    /**
+     * SSL Verify description
+     *
+     * @access    private
+     * @since     1.7.3
+     *
+     * @return    string
+     */
+    public function _section_sslverify() {
+      _e( 'Check this option if you want to force the Envato API requests to not verify the SSL certificates.', 'envato-wordpress-toolkit' );
+    }
+
+    /**
+     * Set SSL Verify to false
+     *
+     * @access    private
+     * @since     1.7.3
+     *
+     * @return    string
+     */
+    public function _field_deactivate_sslverify() {
+      $options = get_option( EWPT_PLUGIN_SLUG );
+      $field_value = isset( $options['deactivate_sslverify'] ) ? true : false;
+      echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_sslverify]" value="1" ' . checked( $field_value, 1, false ) . ' />';
+    }
+
     /**
      * Change the text on the install or upgrade screen
      *
