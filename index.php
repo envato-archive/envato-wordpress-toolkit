@@ -841,7 +841,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
      * @return    string
      */
     public function _section_sslverify() {
-      _e( 'Check this option if you want to force the Envato API requests to not verify the SSL certificates.', 'envato-wordpress-toolkit' );
+      printf( __( 'Checking this option will set %s to %s for all HTTP requests to the Envato API.', 'envato-wordpress-toolkit' ), '<code>sslverify</code>', '<code>false</code>' );
     }
 
     /**
