@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Envato WordPress Toolkit\n"
-"POT-Creation-Date: 2015-02-12 20:57-0800\n"
-"PO-Revision-Date: 2015-02-12 20:57-0800\n"
+"POT-Creation-Date: 2015-07-06 21:48-0800\n"
+"PO-Revision-Date: 2015-07-06 21:49-0800\n"
 "Last-Translator: Derek Herman <derek@valendesigns.com>\n"
 "Language-Team: Envato\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.7.6\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
 "esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -217,7 +217,15 @@ msgstr ""
 msgid "Deactivate Github Updater"
 msgstr ""
 
-#: ../index.php:752
+#: ../index.php:741
+msgid "SSL Verify"
+msgstr ""
+
+#: ../index.php:742
+msgid "Deactivate SSL Verify"
+msgstr ""
+
+#: ../index.php:754
 msgid ""
 "To obtain your API Key, visit your \"My Settings\" page on any of the Envato "
 "Marketplaces. Once a valid connection has been made any changes to the API "
@@ -228,7 +236,7 @@ msgid ""
 "possible the author has not made it available for auto install yet."
 msgstr ""
 
-#: ../index.php:790
+#: ../index.php:792
 msgid ""
 "This plugin will automatically save your theme as a ZIP archive before it "
 "does an upgrade. The directory those backups get saved to is <code>wp-"
@@ -238,7 +246,7 @@ msgid ""
 "you don't want to backup your theme you can check the box below."
 msgstr ""
 
-#: ../index.php:816
+#: ../index.php:818
 #, php-format
 msgid ""
 "This option lets you deactivate the %s class, so it does not load. If you "
@@ -246,33 +254,40 @@ msgid ""
 "plugin will look for a new version on Github; check it and it stops looking."
 msgstr ""
 
-#: ../index.php:847
+#: ../index.php:844
+#, php-format
+msgid ""
+"Checking this option will set %s to %s for all HTTP requests to the Envato "
+"API."
+msgstr ""
+
+#: ../index.php:875
 #, php-format
 msgid "Return to %s"
 msgstr ""
 
-#: ../index.php:872
+#: ../index.php:900
 msgid "You do not have sufficient permissions to install themes for this site."
 msgstr ""
 
-#: ../index.php:884
+#: ../index.php:912
 #, php-format
 msgid "Installing Theme: %s"
 msgstr ""
 
-#: ../index.php:913 ../index.php:940 ../index.php:973
+#: ../index.php:941 ../index.php:968 ../index.php:1001
 msgid "You do not have sufficient permissions to update themes for this site."
 msgstr ""
 
-#: ../index.php:942
+#: ../index.php:970
 msgid "Update Theme"
 msgstr ""
 
-#: ../index.php:976
+#: ../index.php:1004
 msgid "You do not have sufficient permissions to delete themes for this site."
 msgstr ""
 
-#: ../index.php:1048
+#: ../index.php:1076
 msgid ""
 "This .htaccess file ensures that other people cannot download your backup "
 "files."

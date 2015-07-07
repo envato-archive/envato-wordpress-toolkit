@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
- * Version: 1.7.2
+ * Version: 1.7.3
  * Author: Envato
  * Author URI: http://envato.com
  */
@@ -62,7 +62,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       /**
        * Plugin Version
        */
-      define( 'EWPT_PLUGIN_VER', '1.7.2' );
+      define( 'EWPT_PLUGIN_VER', '1.7.3' );
       
       /**
        * Plugin Name
@@ -738,6 +738,8 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       add_settings_field( 'skip_theme_backup', __( 'Skip Theme Backup', 'envato-wordpress-toolkit' ), array( $this, '_field_skip_theme_backup' ), EWPT_PLUGIN_SLUG, 'backup_info' );
       add_settings_section( 'github_updater', __( 'Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_section_github_updater' ), EWPT_PLUGIN_SLUG );
       add_settings_field( 'deactivate_github_updater', __( 'Deactivate Github Updater', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_github_updater' ), EWPT_PLUGIN_SLUG, 'github_updater' );
+      add_settings_section( 'sslverify', __( 'SSL Verify', 'envato-wordpress-toolkit' ), array( $this, '_section_sslverify' ), EWPT_PLUGIN_SLUG );
+      add_settings_field( 'deactivate_sslverify', __( 'Deactivate SSL Verify', 'envato-wordpress-toolkit' ), array( $this, '_field_deactivate_sslverify' ), EWPT_PLUGIN_SLUG, 'sslverify' );
     }
     
     /**
@@ -829,7 +831,33 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       $field_value = isset( $options['deactivate_github_updater'] ) ? true : false;
       echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_github_updater]" value="1" ' . checked( $field_value, 1, false ) . ' />';
     }
-    
+
+    /**
+     * SSL Verify description
+     *
+     * @access    private
+     * @since     1.7.3
+     *
+     * @return    string
+     */
+    public function _section_sslverify() {
+      printf( __( 'Checking this option will set %s to %s for all HTTP requests to the Envato API.', 'envato-wordpress-toolkit' ), '<code>sslverify</code>', '<code>false</code>' );
+    }
+
+    /**
+     * Set SSL Verify to false
+     *
+     * @access    private
+     * @since     1.7.3
+     *
+     * @return    string
+     */
+    public function _field_deactivate_sslverify() {
+      $options = get_option( EWPT_PLUGIN_SLUG );
+      $field_value = isset( $options['deactivate_sslverify'] ) ? true : false;
+      echo '<input type="checkbox" name="' . EWPT_PLUGIN_SLUG . '[deactivate_sslverify]" value="1" ' . checked( $field_value, 1, false ) . ' />';
+    }
+
     /**
      * Change the text on the install or upgrade screen
      *

@@ -41,7 +41,7 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
      * @access    private
      * @since     1.0
      */
-    protected $public_url = 'http://marketplace.envato.com/api/edge/set.json';
+    protected $public_url = 'https://marketplace.envato.com/api/edge/set.json';
     
     /**
      * Error messages
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
         return $errors;
       }
         
-      $url = "http://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
+      $url = "https://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set$set_data.json";
       
       /* set transient ID for later */
       $transient = substr( md5( $user_name . '_' . $set . $set_data ), 0, 16 );
@@ -358,13 +358,19 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
       if ( empty( $url ) ) {
         return false;
       }
-      
+
       $args = array(
-        'headers'   => array( 'Accept-Encoding' => '' ), 
-        'sslverify' => false,
-        'timeout'   => 300
+        'headers'    => array( 'Accept-Encoding' => '' ), 
+        'timeout'    => 30,
+        'user-agent' => 'Toolkit/1.7.3',
       );
-      $request = wp_remote_request( $url, $args );
+
+      $options = get_option( EWPT_PLUGIN_SLUG );
+      if ( isset( $options['deactivate_sslverify'] ) ) {
+        $args['sslverify'] = false;
+      }
+
+      $request = wp_safe_remote_request( $url, $args );
   
       if ( is_wp_error( $request ) ) {
       	echo $request->get_error_message();

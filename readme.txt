@@ -1,9 +1,9 @@
 === Envato WordPress Toolkit ===
 Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
-Requires at least: 3.6
-Tested up to: 4.1
-Stable tag: 1.7.2
+Requires at least: 3.7
+Tested up to: 4.3-beta1
+Stable tag: 1.7.3
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -31,6 +31,13 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.7.3 =
+* Added a custom user agent to all API requests so a connection is once again possible.
+* Added the option to turn sslverify on and off.
+* Envato API requests are now using HTTPS endpoints.
+* Replace `wp_remote_request` with `wp_safe_remote_request`, which will validated the API url.
+* Lowered the API request timeout to something more reasonable.
 
 = 1.7.2 =
 * Added checks to stop PHP from throwing redeclare class errors.
