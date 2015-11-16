@@ -764,7 +764,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
      */
     public function _field_user_name() {
       $options = get_option( EWPT_PLUGIN_SLUG );
-      echo '<input type="text" class="regular-text" name="' . EWPT_PLUGIN_SLUG . '[user_name]" value="' . esc_attr( $options['user_name'] ) . '" />';
+      echo '<input type="text" class="regular-text" name="' . EWPT_PLUGIN_SLUG . '[user_name]" value="' . esc_attr( $options['user_name'] ) . '" autocomplete="off" />';
     }
     
     /**
@@ -777,7 +777,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
      */
     public function _field_api_key() {
       $options = get_option( EWPT_PLUGIN_SLUG );
-      echo '<input type="password" class="regular-text" name="' . EWPT_PLUGIN_SLUG . '[api_key]" value="' . esc_attr( $options['api_key'] ) . '" />';
+      echo '<input type="password" class="regular-text" name="' . EWPT_PLUGIN_SLUG . '[api_key]" value="' . esc_attr( $options['api_key'] ) . '" autocomplete="off" />';
     }
     
     /**
