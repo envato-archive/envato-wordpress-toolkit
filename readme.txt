@@ -1,3 +1,9 @@
+== Deprecation ==
+
+This plugin is deprecated in favour of a newer version. Please update to using
+https://github.com/envato/wp-envato-market as there will no longer be any
+bugfixes or support for this version.
+
 === Envato WordPress Toolkit ===
 Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
@@ -9,9 +15,9 @@ WordPress toolkit for Envato Marketplace hosted items. Currently supports the fo
 
 == Description ==
 
-This toolkit plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and upgrading those themes. Basically, users that have purchased themes from ThemeForest.net can now install and upgrade any theme that takes advantage of these new methods. 
+This toolkit plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and upgrading those themes. Basically, users that have purchased themes from ThemeForest.net can now install and upgrade any theme that takes advantage of these new methods.
 
-For end users, all that's required to get started is an Envato Marketplace username & API key, and to have purchased one of the many WordPress themes found on ThemeForest.net. 
+For end users, all that's required to get started is an Envato Marketplace username & API key, and to have purchased one of the many WordPress themes found on ThemeForest.net.
 
 For theme authors, navigate to your theme's admin page on ThemeForest.net and click edit; you'll need to upload the `Optional WordPress Theme` ZIP which contains your installable WordPress Theme. Once you've got an installable ZIP uploaded and approved, users can install & update directly from within WordPress. Also, to take advantage of the update functionality you'll need to increment your themes version in the style.css every time a new version is available for download and repeat the process above of uploading an installable ZIP.
 
