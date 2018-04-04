@@ -362,7 +362,7 @@ if ( ! class_exists( 'Envato_Protected_API' ) ) {
       $args = array(
         'headers'    => array( 'Accept-Encoding' => '' ),
         'timeout'    => 30,
-        'user-agent' => 'Toolkit/1.7.4',
+        'user-agent' => 'Toolkit/1.8.0',
       );
 
       $options = get_option( EWPT_PLUGIN_SLUG );

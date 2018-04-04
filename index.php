@@ -3,7 +3,7 @@
  * Plugin Name: Envato WordPress Toolkit (Deprecated)
  * Plugin URI: https://github.com/envato/envato-wordpress-toolkit
  * Description: WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
- * Version: 1.7.4
+ * Version: 1.8.0
  * Author: Envato
  * Author URI: http://envato.com
  */
@@ -62,7 +62,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
       /**
        * Plugin Version
        */
-      define( 'EWPT_PLUGIN_VER', '1.7.4' );
+      define( 'EWPT_PLUGIN_VER', '1.8.0' );
 
       /**
        * Plugin Name
@@ -189,7 +189,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
 	  /**
 	   * Adds the deprecation admin notice.
 	   *
-	   * @since 1.7.4
+	   * @since 1.8.0
 	   */
     public function _deprecation_notice(){
 	    $class = 'notice notice-error';
@@ -760,7 +760,7 @@ if ( ! class_exists( 'Envato_WP_Toolkit' ) ) {
      * Deprecation notice on settings page.
      *
      * @access    private
-     * @since     1.7.4
+     * @since     1.8.0
      *
      * @return    string
      */

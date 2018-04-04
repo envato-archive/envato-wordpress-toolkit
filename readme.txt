@@ -9,7 +9,7 @@ Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
 Requires at least: 3.7
 Tested up to: 4.9.5
-Stable tag: 1.7.4
+Stable tag: 1.8.0
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
@@ -38,7 +38,7 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 
 == Changelog ==
 
-= 1.7.4 =
+= 1.8.0 =
 * Added deprecation notice as this plugin will soon stop working.
 
 = 1.7.3 =
