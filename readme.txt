@@ -1,17 +1,23 @@
+== Deprecation ==
+
+This plugin is deprecated in favour of a newer version. Please update to using
+https://github.com/envato/wp-envato-market as there will no longer be any
+bugfixes or support for this version.
+
 === Envato WordPress Toolkit ===
 Contributors: envato, valendesigns
 Tags: install, update, api, envato, theme, upgrade
-Requires at least: 3.6
-Tested up to: 4.1
-Stable tag: 1.7.2
+Requires at least: 3.7
+Tested up to: 4.9.5
+Stable tag: 1.8.0
 
 WordPress toolkit for Envato Marketplace hosted items. Currently supports the following theme functionality: install, upgrade, & backups during upgrade.
 
 == Description ==
 
-This toolkit plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and upgrading those themes. Basically, users that have purchased themes from ThemeForest.net can now install and upgrade any theme that takes advantage of these new methods. 
+This toolkit plugin establishes an Envato Marketplace API connection to take advantage of the new `wp-list-themes` & `wp-download` methods created specifically for this plugin. These API methods grants access to information about your purchased themes and create temporary download URL's for installing and upgrading those themes. Basically, users that have purchased themes from ThemeForest.net can now install and upgrade any theme that takes advantage of these new methods.
 
-For end users, all that's required to get started is an Envato Marketplace username & API key, and to have purchased one of the many WordPress themes found on ThemeForest.net. 
+For end users, all that's required to get started is an Envato Marketplace username & API key, and to have purchased one of the many WordPress themes found on ThemeForest.net.
 
 For theme authors, navigate to your theme's admin page on ThemeForest.net and click edit; you'll need to upload the `Optional WordPress Theme` ZIP which contains your installable WordPress Theme. Once you've got an installable ZIP uploaded and approved, users can install & update directly from within WordPress. Also, to take advantage of the update functionality you'll need to increment your themes version in the style.css every time a new version is available for download and repeat the process above of uploading an installable ZIP.
 
@@ -31,6 +37,16 @@ Below is a description of the new api-key protected Envato Marketplace API metho
 4. Once the API connection has been established you will see a list of themes that can be auto installed. If you don't see any themes and are certain you've done everything correct, there is a good chance the theme author has not updated their theme to be available for auto install and update. If that's the case, please contact the theme author and ask them to update their theme's information.
 
 == Changelog ==
+
+= 1.8.0 =
+* Added deprecation notice as this plugin will soon stop working.
+
+= 1.7.3 =
+* Added a custom user agent to all API requests so a connection is once again possible.
+* Added the option to turn sslverify on and off.
+* Envato API requests are now using HTTPS endpoints.
+* Replace `wp_remote_request` with `wp_safe_remote_request`, which will validated the API url.
+* Lowered the API request timeout to something more reasonable.
 
 = 1.7.2 =
 * Added checks to stop PHP from throwing redeclare class errors.
