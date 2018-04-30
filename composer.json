@@ -1,0 +1,7 @@
+{
+    "name": "envato/envato-wordpress-toolkit",
+    "description": "Envato WordPress Toolkit",
+    "homepage": "https://github.com/envato/envato-wordpress-toolkit",
+    "minimum-stability":"stable",
+    "type": "wordpress-plugin"
+}
